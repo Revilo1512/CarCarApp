@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.carcarapp"
+    namespace = "com.example.carcarapplication"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.carcarapp"
+        applicationId = "com.example.carcarapplication"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

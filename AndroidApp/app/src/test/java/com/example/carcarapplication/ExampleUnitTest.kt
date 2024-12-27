@@ -1,4 +1,4 @@
-package com.example.carcarapp
+package com.example.carcarapplication
 
 import org.junit.Test
 
