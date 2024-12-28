@@ -2,6 +2,7 @@ package at.carcar.carcarbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @SpringBootApplication
 public class CarcarBackendApplication {
@@ -9,5 +10,4 @@ public class CarcarBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CarcarBackendApplication.class, args);
 	}
-
 }
