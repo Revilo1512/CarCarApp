@@ -1,27 +1,37 @@
 package at.carcar.carcarbackend.User;
 
 import at.carcar.carcarbackend.Group.Group;
+import jakarta.persistence.*;
 
+
+import java.util.ArrayList;
 import java.util.List;
-
+@Entity
+@Table(name = "users")
 public class User {
-    private int id;
+    @Id
+    @GeneratedValue(
+        strategy = GenerationType.IDENTITY
+    )
+    private long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false, unique = true)
     private String email;
 
-    private List<Integer> invites;
-
-    public User(int id, String name, String email) {
-        this.id = id;
+    public User(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+    public User() {
+
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -34,7 +44,7 @@ public class User {
     }
 
     public List<Integer> getInvites() {
-        return invites;
+        return new ArrayList<>();
     }
 
     public void login() {
@@ -59,12 +69,4 @@ public class User {
         // Implement functionality to send a join request to a group
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }
