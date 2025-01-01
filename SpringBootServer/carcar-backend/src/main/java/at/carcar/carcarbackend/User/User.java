@@ -43,10 +43,6 @@ public class User {
         return email;
     }
 
-    public List<Integer> getInvites() {
-        return new ArrayList<>();
-    }
-
     public void login() {
         // Implement login functionality
     }

@@ -2,27 +2,49 @@ package at.carcar.carcarbackend.Trip;
 
 import at.carcar.carcarbackend.Car.Car;
 import at.carcar.carcarbackend.User.User;
+import jakarta.persistence.*;
 
 import java.util.Date;
-
+@Entity
+@Table(name = "trips")
 public class Trip {
-    private int tripID;
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
+    private long id;
     private Date startTime;
     private Date endTime;
     private double distance;
     private double fuelUsed;
+    @ManyToOne
+    @JoinColumn(name = "car_id")
     private Car car;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
+    public Trip() {
+
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
     public Trip(int tripID, Date startTime, Car car, User user) {
-        this.tripID = tripID;
+        this.id = tripID;
         this.startTime = startTime;
         this.car = car;
         this.user = user;
     }
 
-    public int getTripID() {
-        return tripID;
+    public long getId() {
+        return id;
     }
 
     public Car getCar() {

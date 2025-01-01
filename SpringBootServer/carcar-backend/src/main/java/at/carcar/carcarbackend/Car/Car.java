@@ -1,24 +1,32 @@
 package at.carcar.carcarbackend.Car;
 
 import at.carcar.carcarbackend.Report.Report;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "cars")
 
 public class Car {
-    private int carID;
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
+    private long id;
     private String carName;
     private String brand;
     private String model;
     private boolean availabilityStatus;
 
-    public Car(int carID, String carName, String brand, String model, boolean availabilityStatus) {
-        this.carID = carID;
+    public Car(int id, String carName, String brand, String model, boolean availabilityStatus) {
+        this.id = id;
         this.carName = carName;
         this.brand = brand;
         this.model = model;
         this.availabilityStatus = availabilityStatus;
     }
 
-    public int getCarID() {
-        return carID;
+    public Car() {
+
     }
 
     public String getBrand() {
@@ -64,4 +72,11 @@ public class Car {
     }
 
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

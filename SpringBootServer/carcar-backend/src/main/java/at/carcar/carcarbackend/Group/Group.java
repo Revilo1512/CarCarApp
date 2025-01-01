@@ -1,19 +1,34 @@
 package at.carcar.carcarbackend.Group;
 
 import at.carcar.carcarbackend.User.User;
+import jakarta.persistence.*;
 
-import java.util.List;
+@Entity
+@Table(name = "groups")
 
 public class Group {
-    private int groupID;
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
+    private long id;
+    //@ElementCollection
+    //private List<Car> cars;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "admin_user_id")
     private User admin;
-    private List<User> pendingRequests;
+
+    //private List<User> pendingRequests;
 
     public Group(int groupID, String name, User admin) {
-        this.groupID = groupID;
+        this.id = groupID;
         this.name = name;
         this.admin = admin;
+    }
+
+    public Group() {
+
     }
 
     public String getName() {
