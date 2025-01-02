@@ -3,10 +3,7 @@ package at.carcar.carcarbackend.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +20,6 @@ public class UserController {
 
     // go to localhost:8080/user
     @GetMapping
-
     public ResponseEntity<List<User>> getAllUsers(){
         List<User> user = service.getAllUsers();
         if(user.isEmpty()){
@@ -40,4 +36,30 @@ public class UserController {
         }
         return ResponseEntity.ok(user.get());
     }
+    // Login
+    @GetMapping("/getUser")
+    public ResponseEntity<?> getUser(@RequestParam String name, @RequestParam String password) {
+        User user = service.validateUser(name, password);
+        if (user != null) {
+            return ResponseEntity.ok(user); // Return the user data
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
+    }
+    @PostMapping("/addUser")
+    public ResponseEntity<?> addUser(@RequestBody User newUser) {
+        System.out.println("Received");
+
+        try {
+            newUser = service.registerUser(newUser);
+            if (newUser != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(newUser); // Return the created user
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed. Username or email already exists.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+
 }
