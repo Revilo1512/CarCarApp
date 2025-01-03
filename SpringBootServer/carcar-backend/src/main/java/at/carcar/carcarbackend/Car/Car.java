@@ -24,6 +24,12 @@ public class Car {
         this.model = model;
         this.availabilityStatus = availabilityStatus;
     }
+    public Car(String carName, String brand, String model, boolean availabilityStatus) {
+        this.carName = carName;
+        this.brand = brand;
+        this.model = model;
+        this.availabilityStatus = availabilityStatus;
+    }
 
     public Car() {
 

@@ -32,6 +32,13 @@ public class Group {
         this.admin = admin;
     }
 
+    public Group(String name, User admin, List<User> users, List<Car> cars) {
+        this.name = name;
+        this.admin = admin;
+        this.users = users;
+        this.cars = cars;
+    }
+
     public Group() {
 
     }

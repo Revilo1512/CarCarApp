@@ -42,6 +42,14 @@ public class Trip {
         this.car = car;
         this.user = user;
     }
+    public Trip(Date startTime, Date endTime, double distance, double fuelUsed, Car car, User user) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.distance = distance;
+        this.fuelUsed = fuelUsed;
+        this.car = car;
+        this.user = user;
+    }
 
     public long getId() {
         return id;

@@ -1,6 +1,7 @@
 package at.carcar.carcarbackend.Report;
 
 import at.carcar.carcarbackend.Trip.Trip;
+import at.carcar.carcarbackend.User.User;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -14,7 +15,9 @@ public abstract class Report {
             strategy = GenerationType.IDENTITY
     )
     private long id;
-    private long author_user_id;
+    @ManyToOne
+    @JoinColumn(name = "author_user_id")
+    private User author_user;
     private Date date;
     private String description;
     //private List<String> changeLog;
@@ -30,9 +33,17 @@ public abstract class Report {
         this.trip = trip;
     }
 
-    public Report(int reportId, int userId, Date date, String description, Trip trip) {
+    public Report(int reportId, User author_user, Date date, String description, Trip trip) {
         this.id = reportId;
-        this.author_user_id = userId;
+        this.author_user = author_user;
+        this.date = date;
+        this.description = description;
+        this.trip = trip;
+        //this.changeLog = new ArrayList<String>();
+    }
+
+    public Report(User author_user, Date date, String description, Trip trip) {
+        this.author_user = author_user;
         this.date = date;
         this.description = description;
         this.trip = trip;
