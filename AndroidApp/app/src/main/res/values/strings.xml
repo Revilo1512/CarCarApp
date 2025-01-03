@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">CarCarApplication</string>
+    <string name="app_name">CarCar</string>
+
+    <!-- Home Screen -->
+    <string name="home_title">Home</string>
+
+    <!-- Group Screen -->
+    <string name="group_title">Groups</string>
 </resources>
