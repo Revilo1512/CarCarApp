@@ -18,13 +18,24 @@ public class User {
     private String name;
     @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
+    private String password;
+    @ManyToMany
+    @JoinTable(
+            name = "user_groups",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private List<Group> groups;
 
-    public User(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
     public User() {
 
+    }
+
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     public void setName(String name) {
@@ -65,4 +76,7 @@ public class User {
         // Implement functionality to send a join request to a group
     }
 
+    public String getPassword() {
+        return password;
+    }
 }

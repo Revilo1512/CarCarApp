@@ -1,7 +1,10 @@
 package at.carcar.carcarbackend.Group;
 
+import at.carcar.carcarbackend.Car.Car;
 import at.carcar.carcarbackend.User.User;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "groups")
@@ -12,8 +15,10 @@ public class Group {
             strategy = GenerationType.IDENTITY
     )
     private long id;
-    //@ElementCollection
-    //private List<Car> cars;
+    @ManyToMany(mappedBy = "groups")
+    private List<User> users;
+    @OneToMany
+    private List<Car> cars;
     private String name;
     @ManyToOne
     @JoinColumn(name = "admin_user_id")
