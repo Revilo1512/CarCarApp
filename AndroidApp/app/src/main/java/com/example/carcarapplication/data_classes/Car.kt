@@ -4,6 +4,10 @@ import java.io.Serializable
 
 data class Car(
     val carID : Int,
-    val name : String,
-    val email : String,
+    val carName : String,
+    val brand : String,
+    val model : String,
+    val availabilityStatus : Boolean,
+    val reports : List<Report>,
+    val trips : List<Trip>
 ) : Serializable

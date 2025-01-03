@@ -1,5 +1,6 @@
 package com.example.carcarapplication.ui.screens
 
+import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.carcarapplication.MainActivity
 import com.example.carcarapplication.R
+import com.example.carcarapplication.TestValues
 import com.example.carcarapplication.api_helpers.ApiService
 import com.example.carcarapplication.api_helpers.RetrofitClient
 import com.example.carcarapplication.data_classes.User
@@ -53,7 +55,7 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
             .fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.carcaricon),
+            painter = painterResource(id = R.drawable.carcarpicto),
             contentDescription = "bitmap",
             contentScale = ContentScale.Fit,
             modifier = Modifier
@@ -87,10 +89,7 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
                         try {
                             val user = apiService.getUser(username, password)
                             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(context, MainActivity::class.java).apply {
-                                putExtra("user", user)
-                            }
-                            context.startActivity(intent)
+                            startMainActivity(user = user, context)
                         } catch (e: HttpException) {
                             Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()
                         } catch (e: Exception) {
@@ -122,16 +121,16 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
             modifier = Modifier
                 .padding(top = 10.dp)
                 .clickable {
-                    val testUser = User(
-                        userID = 9999999,
-                        username = "testuser",
-                        email = "testuser@email.com",
-                    )
-                    val intent = Intent(context, MainActivity::class.java).apply {
-                        putExtra("user", testUser)
-                    }
-                    context.startActivity(intent)
+                    startMainActivity(user = TestValues.getUser(), context)
                 }
         )
     }
+}
+
+
+private fun startMainActivity(user : User, context: Context) {
+    val intent = Intent(context, MainActivity::class.java).apply {
+        putExtra("user", user)
+    }
+    context.startActivity(intent)
 }

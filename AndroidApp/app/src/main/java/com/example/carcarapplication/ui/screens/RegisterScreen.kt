@@ -53,7 +53,7 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.carcaricon),
+            painter = painterResource(id = R.drawable.carcarpicto),
             contentDescription = "bitmap",
             contentScale = ContentScale.Fit,
             modifier = Modifier
@@ -121,24 +121,6 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
                 .padding(top = 10.dp)
                 .clickable {
                     onNavigateToLogin()
-                }
-        )
-
-        Text(
-            text = "use test user",
-            textDecoration = TextDecoration.Underline,
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .clickable {
-                    val testUser = User(
-                        userID = 9999999,
-                        username = "testuser",
-                        email = "testuser@email.com",
-                    )
-                    val intent = Intent(context, MainActivity::class.java).apply {
-                        putExtra("user", testUser)
-                    }
-                    context.startActivity(intent)
                 }
         )
     }
