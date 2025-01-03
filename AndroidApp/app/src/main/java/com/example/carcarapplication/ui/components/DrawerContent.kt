@@ -1,10 +1,14 @@
 package com.example.carcarapplication.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun DrawerContent(
@@ -24,10 +28,16 @@ fun DrawerContent(
         )
         HorizontalDivider()
         TextButton(onClick = onNavigateToHome) {
-            Text(text = "Home")
+            Text(
+                text = "Home",
+                fontSize = 16.sp
+            )
         }
         TextButton(onClick = onNavigateToGroup) {
-            Text(text = "Group")
+            Text(
+                text = "Group",
+                fontSize = 16.sp
+            )
         }
     }
 }
