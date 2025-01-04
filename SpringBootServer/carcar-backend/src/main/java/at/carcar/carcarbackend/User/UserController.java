@@ -37,7 +37,7 @@ public class UserController {
         return ResponseEntity.ok(user.get());
     }
     // Login
-    @GetMapping("/getUser")
+    @GetMapping("/login")
     public ResponseEntity<?> getUser(@RequestParam String email, @RequestParam String password) {
         User user = service.validateUser(email, password);
         if (user != null) {

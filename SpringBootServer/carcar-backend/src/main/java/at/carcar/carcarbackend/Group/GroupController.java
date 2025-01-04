@@ -1,4 +1,5 @@
 package at.carcar.carcarbackend.Group;
+import at.carcar.carcarbackend.Car.Car;
 import at.carcar.carcarbackend.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,6 +63,9 @@ public class GroupController {
     }
 
     // Add Car to Group
-    
+    @PutMapping("/addCar/{groupID}")
+    public ResponseEntity<?> addCar(@PathVariable Long groupID, @RequestBody Car car) {
+        return null;
+    }
 }
 
