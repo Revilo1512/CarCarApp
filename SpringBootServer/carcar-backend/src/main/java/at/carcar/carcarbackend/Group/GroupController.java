@@ -39,8 +39,8 @@ public class GroupController {
     }
 
     // Create Group
-    @PostMapping("/createGroup/{userID}")
-    public ResponseEntity<?> addGroup(@PathVariable Long userID, @RequestParam String groupName) {
+    @PostMapping("/createGroup")
+    public ResponseEntity<?> addGroup(@RequestParam Long userID, @RequestParam String groupName) {
 
         Group newGroup;
         try {
@@ -56,16 +56,46 @@ public class GroupController {
     }
 
     // Delete Group
-    @DeleteMapping("/deleteGroup/{groupID}")
-    public ResponseEntity<?> deleteGroup(@PathVariable Long groupID) {
+    @DeleteMapping("/deleteGroup")
+    public ResponseEntity<?> deleteGroup(@RequestParam Long groupID) {
         service.deleteGroup(groupID);
         return ResponseEntity.status(HttpStatus.OK).body("Group successfully deleted!");
     }
 
     // Add Car to Group
-    @PutMapping("/addCar/{groupID}")
-    public ResponseEntity<?> addCar(@PathVariable Long groupID, @RequestBody Car car) {
-        return null;
+    @PutMapping("/addCar")
+    public ResponseEntity<?> addCar(@RequestParam Long groupID, @RequestParam Long carID) {
+        Group group;
+
+        try {
+            group = service.addCar(groupID, carID);
+
+            if (group != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(group);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Group Creation failed");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+
+    // Remove Car from Group
+    @PutMapping("/removeCar")
+    public ResponseEntity<?> removeCar(@RequestParam Long groupID, @RequestParam Long carID) {
+        Group group;
+
+        try {
+            group = service.removeCar(groupID, carID);
+
+            if (group != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(group);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete Group");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 }
 

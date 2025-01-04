@@ -56,8 +56,8 @@ public class CarController {
     }
 
     // Delete Group
-    @DeleteMapping("/deleteCar/{carID}")
-    public ResponseEntity<?> deleteCar(@PathVariable Long carID) {
+    @DeleteMapping("/deleteCar")
+    public ResponseEntity<?> deleteCar(@RequestParam Long carID) {
         service.deleteCar(carID);
         return ResponseEntity.status(HttpStatus.OK).body("Car successfully deleted!");
     }

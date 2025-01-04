@@ -1,4 +1,6 @@
 package at.carcar.carcarbackend.Group;
+import at.carcar.carcarbackend.Car.Car;
+import at.carcar.carcarbackend.Car.CarRepository;
 import at.carcar.carcarbackend.User.User;
 import at.carcar.carcarbackend.User.UserRepository;
 import org.springframework.stereotype.Service;
@@ -9,10 +11,12 @@ import java.util.Optional;
 public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final CarRepository carRepository;
 
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository) {
+    public GroupService(GroupRepository groupRepository, UserRepository userRepository, CarRepository carRepository) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+        this.carRepository = carRepository;
     }
 
     public Optional<Group> findGroupById(long id) {
@@ -45,5 +49,40 @@ public class GroupService {
                 "Group with ID: " + groupID + " does not exist!"));
 
         groupRepository.deleteById(groupID);
+    }
+
+    public Group addCar(Long groupID, Long carID) {
+        Group group = groupRepository.findGroupById(groupID).orElseThrow(() -> new IllegalStateException(
+                "Group with ID: " + groupID + " does not exist!"));
+
+        Car car = carRepository.findById(carID).orElseThrow(() -> new IllegalStateException(
+                "Car with ID: " + carID + " does not exist!"));
+
+        if (!group.addCar(car)) throw new IllegalStateException("Failed to add Car to Group!");
+
+        groupRepository.save(group);
+
+        return group;
+    }
+
+    public Group removeCar(Long groupID, Long carID) {
+        Group group = groupRepository.findGroupById(groupID).orElseThrow(() -> new IllegalStateException(
+                "Group with ID: " + groupID + " does not exist!"));
+
+        Car car = carRepository.findById(carID).orElseThrow(() -> new IllegalStateException(
+                "Car with ID: " + carID + " does not exist!"));
+
+        if (!group.removeCar(car)) throw new IllegalStateException("Failed to remove Car from Group!");
+
+        Group newGroup = new Group(groupID, group.getName(), group.getAdmin(), group.getUsers(), group.getCars());
+
+        groupRepository.save(group);
+//        System.out.println(group);
+//        groupRepository.deleteById(groupID);
+//        System.out.println("Eins");
+//        System.out.println(newGroup);
+//        groupRepository.save(newGroup);
+
+        return group;
     }
 }

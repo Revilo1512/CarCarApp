@@ -15,8 +15,17 @@ public class Group {
             strategy = GenerationType.IDENTITY
     )
     private long id;
-    @ManyToMany(mappedBy = "groups")
+//    @ManyToMany(mappedBy = "groups")
+//    private List<User> users;
+
+    @ManyToMany
+    @JoinTable(
+            name = "groups_users",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> users;
+
     @OneToMany
     private List<Car> cars;
     private String name;
@@ -26,10 +35,12 @@ public class Group {
 
     //private List<User> pendingRequests;
 
-    public Group(int groupID, String name, User admin) {
+    public Group(long groupID, String name, User admin, List<User> users, List<Car> cars) {
         this.id = groupID;
         this.name = name;
         this.admin = admin;
+        this.users = users;
+        this.cars = cars;
     }
 
     public Group(String name, User admin, List<User> users, List<Car> cars) {
@@ -45,6 +56,14 @@ public class Group {
 
     public String getName() {
         return name;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public List<Car> getCars() {
+        return cars;
     }
 
     public void setName(String name) {
@@ -75,14 +94,23 @@ public class Group {
         // Implement functionality to remove a user from the group
     }
 
-    public void addCar() {
-        // Implement functionality to add a car to the group
+    public boolean addCar(Car car) {
+        return cars.add(car);
     }
 
-    public void removeCar() {
-        // Implement functionality to remove a car from the group
+    public boolean removeCar(Car car) {
+        return cars.remove(car);
     }
 
-
+    @Override
+    public String toString() {
+        return "Group{" +
+                "id=" + id +
+                ", users=" + users +
+                ", cars=" + cars +
+                ", name='" + name + '\'' +
+                ", admin=" + admin +
+                '}';
+    }
 }
 

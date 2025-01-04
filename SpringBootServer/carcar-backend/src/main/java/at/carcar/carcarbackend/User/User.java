@@ -20,12 +20,15 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
-    @ManyToMany
-    @JoinTable(
-            name = "user_groups",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id")
-    )
+//    @ManyToMany
+//    @JoinTable(
+//            name = "user_groups",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "group_id")
+//    )
+//    private List<Group> groups;
+
+    @ManyToMany(mappedBy = "users")
     private List<Group> groups;
 
     public User() {
