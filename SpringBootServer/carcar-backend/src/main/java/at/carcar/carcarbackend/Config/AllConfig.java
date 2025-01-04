@@ -23,7 +23,7 @@ import java.util.List;
 public class AllConfig {
 
     private List<User> users = List.of(
-            new User("Peter Nis",
+            new User("Peter",
                     "p.nis@gmail.com",
                     "pnis"
             ),

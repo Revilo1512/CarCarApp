@@ -1,9 +1,11 @@
 package at.carcar.carcarbackend.User;
 
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,9 +27,12 @@ public class UserService {
     }
 
     // Validate user for login
-    public User validateUser(String name, String password) {
-        Optional<User> user = userRepository.findByName(name);
+    public User validateUser(String email, String password) {
+        Optional<User> user = userRepository.findUserByEmail(email);
 
+        System.out.println(email);
+        System.out.println(password);
+        System.out.println("Is User present? " + user.isPresent());
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
             return user.get();
         }
@@ -37,12 +42,36 @@ public class UserService {
     // Register user
     public User registerUser(User user) {
 
-        if (userRepository.existsByName(user.getName()) || userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsUserByEmail(user.getEmail())) {
             return null;
         }
 
         String hashedPassword = passwordEncoder.encode(user.getPassword());
-        User newUser = new User();
+        User newUser = new User(user.getName(), user.getEmail(), hashedPassword);
+
         return userRepository.save(newUser);
+    }
+
+    @Transactional
+    public User modifyUser(long userID, String name, String email, String password) {
+        User user = userRepository.findUserById(userID).orElseThrow(() -> new IllegalStateException(
+                "student with ID: " + userID + " does not exist!"
+        ));
+
+        if (name != null && name.length() > 0 && !Objects.equals(user.getName(), name)) {
+            user.setName(name);
+        }
+
+        if (email != null && email.length() > 0 && !Objects.equals(user.getEmail(), email)) {
+            if (userRepository.findUserByEmail(email).isPresent()) {
+                throw new IllegalStateException("email taken");
+            }
+            user.setEmail(email);
+        }
+
+        if (password != null && password.length() > 0) {
+            user.setPassword(passwordEncoder.encode(password));
+        }
+        return user;
     }
 }

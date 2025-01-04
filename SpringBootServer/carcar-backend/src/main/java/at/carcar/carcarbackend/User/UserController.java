@@ -38,20 +38,21 @@ public class UserController {
     }
     // Login
     @GetMapping("/getUser")
-    public ResponseEntity<?> getUser(@RequestParam String name, @RequestParam String password) {
-        User user = service.validateUser(name, password);
+    public ResponseEntity<?> getUser(@RequestParam String email, @RequestParam String password) {
+        User user = service.validateUser(email, password);
         if (user != null) {
             return ResponseEntity.ok(user); // Return the user data
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
+    // Register
     @PostMapping("/addUser")
-    public ResponseEntity<?> addUser(@RequestBody User newUser) {
-        System.out.println("Received");
+    public ResponseEntity<?> addUser(@RequestBody User user) {
 
+        User newUser;
         try {
-            newUser = service.registerUser(newUser);
+            newUser = service.registerUser(user);
             if (newUser != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(newUser); // Return the created user
             } else {
@@ -62,4 +63,23 @@ public class UserController {
         }
     }
 
+    // Modify
+    @PutMapping("/modifyUser/{userID}")
+    public ResponseEntity<?> modifyUser(@PathVariable long userID,
+                                        @RequestParam(required = false) String name,
+                                        @RequestParam(required = false) String email,
+                                        @RequestParam(required = false) String password) {
+        User newUser;
+        try {
+            newUser = service.modifyUser(userID, name, email, password);
+
+            if (newUser != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Modification failed");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
 }
