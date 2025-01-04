@@ -47,8 +47,8 @@ public class UserController {
         }
     }
     // Register
-    @PostMapping("/addUser")
-    public ResponseEntity<?> addUser(@RequestBody User user) {
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody User user) {
 
         User newUser;
         try {

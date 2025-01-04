@@ -15,6 +15,7 @@ import at.carcar.carcarbackend.User.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
 import java.util.List;
@@ -22,98 +23,125 @@ import java.util.List;
 @Configuration
 public class AllConfig {
 
-    private List<User> users = List.of(
-            new User("Peter",
-                    "p.nis@gmail.com",
-                    "pnis"
-            ),
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final List<User> users;
+    private final List<Car> cars;
+    private final List<Group> groups;
+    private final List<Trip> trips;
+    private final List<Report> reports;
 
-            new User("Anton Gressiv",
-            "a.gressiv@gmail.com",
-            "agressiv"
-            ),
 
-            new User("Bill Yard",
-            "b.yard@gmail.com",
-            "byard"
-            ),
+    public AllConfig(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+        this.users = listOfUsers();
+        this.cars = listOfCars();
+        this.groups = listOfGroups();
+        this.trips = listOfTrips();
+        this.reports = listOfReports();
+    }
 
-            new User("Lorenz Auch",
-            "l.auch@gmail.com",
-            "lauch"
-            ),
+    private List<User> listOfUsers() {
+        return List.of(
+                new User("Peter",
+                        "p.nis@gmail.com",
+                        passwordEncoder.encode("pnis")
+                ),
 
-            new User("Herbert Kedicht",
-            "h.kedicht@gmail.com",
-            "hkedicht"
-            ),
+                new User("Anton Gressiv",
+                        "a.gressiv@gmail.com",
+                        passwordEncoder.encode("agressiv")
+                ),
 
-            new User("Knut Schfleck",
-            "k.schfleck@gmail.com",
-            "kschfleck")
-    );
+                new User("Bill Yard",
+                        "b.yard@gmail.com",
+                        passwordEncoder.encode("byard")
+                ),
 
-    List<Car> cars = List.of(
-            new Car("Cityflitzer",
-                    "VW",
-                    "Up",
-                    true),
+                new User("Lorenz Auch",
+                        "l.auch@gmail.com",
+                        passwordEncoder.encode("lauch")
+                ),
 
-            new Car("Der Dicke",
-                    "Dodge",
-                    "RAM",
-                    true),
-            new Car("Old but Gold",
-                    "VW",
-                    "Käfer",
-                    true)
-    );
+                new User("Herbert Kedicht",
+                        "h.kedicht@gmail.com",
+                        passwordEncoder.encode("hkedicht")
+                ),
 
-    List<Group> groups = List.of(
-            new Group("Heiselpartie",
-                    users.get(0),
-                    List.of(users.get(1), users.get(2)),
-                    List.of(cars.get(0), cars.get(1))),
+                new User("Knut Schfleck",
+                        "k.schfleck@gmail.com",
+                        passwordEncoder.encode("kschfleck"))
+        );
+    }
 
-            new Group("Die Geilen",
-                    users.get(3),
-                    List.of(users.get(4), users.get(5)),
-                    List.of(cars.get(2)))
-    );
+    private List<Car> listOfCars() {
+        return List.of(
+                new Car("Cityflitzer",
+                        "VW",
+                        "Up",
+                        true),
 
-    List<Trip> trips = List.of(
-            new Trip(new Date(2024, 12, 1),
-                    new Date(2024, 12, 2),
-                    5,
-                    1,
-                    cars.get(0),
-                    users.get(0)),
+                new Car("Der Dicke",
+                        "Dodge",
+                        "RAM",
+                        true),
+                new Car("Old but Gold",
+                        "VW",
+                        "Käfer",
+                        true)
+        );
+    };
 
-            new Trip (new Date(2025, 1, 1),
-                    new Date (2025, 1, 2),
-                    100.5,
-                    5.4,
-                    cars.get(2),
-                    users.get(3))
-    );
+    private List<Group> listOfGroups() {
+        return List.of(
+                new Group("Heiselpartie",
+                        users.get(0),
+                        List.of(users.get(1), users.get(2)),
+                        List.of(cars.get(0), cars.get(1))),
 
-    List<Report> reports = List.of(
-            new DamageReport(users.get(0),
-                    new Date(2024, 12, 2),
-                    "I bin dem Heisl hint'n eini'gfoan!!",
-                    trips.get(0),
-                    "Mei Auto is fui hinnig, der Schass!",
-                    List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag")),
+                new Group("Die Geilen",
+                        users.get(3),
+                        List.of(users.get(4), users.get(5)),
+                        List.of(cars.get(2)))
+        );
+    };
 
-            new MaintenanceReport(users.get(3),
-                new Date(2025, 1, 2),
-                "Irgendsoana hot den Tank leer g'mocht, geh schleich di!",
-                trips.get(1),
-                "Der Tank woa fui la",
-                1000.7,
-                List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag"))
+    private List<Trip> listOfTrips() {
+        return List.of(
+                new Trip(new Date(2024, 12, 1),
+                        new Date(2024, 12, 2),
+                        5,
+                        1,
+                        cars.get(0),
+                        users.get(0)),
 
-    );
+                new Trip (new Date(2025, 1, 1),
+                        new Date (2025, 1, 2),
+                        100.5,
+                        5.4,
+                        cars.get(2),
+                        users.get(3))
+        );
+    };
+
+    private List<Report> listOfReports() {
+        return List.of(
+                new DamageReport(users.get(0),
+                        new Date(2024, 12, 2),
+                        "I bin dem Heisl hint'n eini'gfoan!!",
+                        trips.get(0),
+                        "Mei Auto is fui hinnig, der Schass!",
+                        List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag")),
+
+                new MaintenanceReport(users.get(3),
+                        new Date(2025, 1, 2),
+                        "Irgendsoana hot den Tank leer g'mocht, geh schleich di!",
+                        trips.get(1),
+                        "Der Tank woa fui la",
+                        1000.7,
+                        List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag"))
+
+        );
+    };
 
     @Bean
     CommandLineRunner commandLineRunner(UserRepository userRep, GroupRepository groupRep, CarRepository carRep,

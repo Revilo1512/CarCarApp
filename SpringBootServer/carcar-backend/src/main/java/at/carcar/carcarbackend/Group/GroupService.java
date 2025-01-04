@@ -28,9 +28,9 @@ public class GroupService {
     }
 
     // Gruppe erstellen
-    public Group createGroup(Long userID, String groupName) {
-        User user = userRepository.findUserById(userID).orElseThrow(() -> new IllegalStateException(
-                "User with ID: " + userID + " does not exist!"));
+    public Group createGroup(Long adminID, String groupName) {
+        User user = userRepository.findUserById(adminID).orElseThrow(() -> new IllegalStateException(
+                "User with ID: " + adminID + " does not exist!"));
 
         Group group;
 

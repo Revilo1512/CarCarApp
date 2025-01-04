@@ -40,11 +40,11 @@ public class GroupController {
 
     // Create Group
     @PostMapping("/createGroup")
-    public ResponseEntity<?> addGroup(@RequestParam Long userID, @RequestParam String groupName) {
+    public ResponseEntity<?> addGroup(@RequestParam Long adminID, @RequestParam String groupName) {
 
         Group newGroup;
         try {
-            newGroup = service.createGroup(userID, groupName);
+            newGroup = service.createGroup(adminID, groupName);
             if (newGroup != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(newGroup); // Return the created Group
             } else {
