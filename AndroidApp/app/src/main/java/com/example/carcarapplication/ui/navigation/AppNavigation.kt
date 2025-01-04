@@ -1,9 +1,11 @@
 package com.example.carcarapplication.ui.navigation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
@@ -11,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +24,8 @@ import com.example.carcarapplication.ui.HomeScreen
 import com.example.carcarapplication.ui.components.DrawerContent
 import kotlinx.coroutines.launch
 import androidx.compose.ui.unit.dp
+import com.example.carcarapplication.R
+import com.example.carcarapplication.TestValues
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,8 +58,14 @@ fun AppNavigation(navController: NavHostController, user: User) {
         ) {
             Scaffold(
                 topBar = {
-                    TopAppBar(
-                        title = { Text("CarCar Application") },
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Image(
+                                painter = painterResource(id = R.drawable.wordmark),
+                                contentDescription = "Wordmark",
+                                modifier = Modifier.size(120.dp)
+                            )
+                        },
                         navigationIcon = {
                             IconButton(
                                 onClick = { scope.launch { drawerState.open() } }
@@ -84,3 +96,11 @@ fun AppNavigation(navController: NavHostController, user: User) {
     }
 }
 
+@Composable
+@Preview(showBackground = true)
+fun AppNavigationPreview() {
+    // Mock NavHostController for preview purposes
+    val navController = androidx.navigation.compose.rememberNavController()
+
+    AppNavigation(navController = navController, user = TestValues.getUser())
+}
