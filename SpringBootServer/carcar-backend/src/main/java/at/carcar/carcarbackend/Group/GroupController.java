@@ -30,7 +30,7 @@ public class GroupController {
     }
 
     @GetMapping("/{groupID}")
-    public ResponseEntity<Group> getGroupById(@PathVariable int groupID) {
+    public ResponseEntity<?> getGroupById(@PathVariable int groupID) {
         Optional<Group> group = service.findGroupById(groupID);
         if (group.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -73,7 +73,7 @@ public class GroupController {
             if (group != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(group);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Group Creation failed");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add Car");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
@@ -91,7 +91,43 @@ public class GroupController {
             if (group != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(group);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete Group");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to remove Car");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+
+    // Add User to Group
+    @PutMapping("/addUser")
+    public ResponseEntity<?> addUser(@RequestParam Long groupID, @RequestParam Long userID) {
+        Group group;
+
+        try {
+            group = service.addUser(groupID, userID);
+
+            if (group != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(group);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add User to Group!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+
+    // Remove User from Group
+    @PutMapping("/removeUser")
+    public ResponseEntity<?> removeUser(@RequestParam Long groupID, @RequestParam Long userID) {
+        Group group;
+
+        try {
+            group = service.removeUser(groupID, userID);
+
+            if (group != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(group);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to remove User from Group!");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());

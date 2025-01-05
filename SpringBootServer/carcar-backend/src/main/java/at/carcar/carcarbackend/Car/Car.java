@@ -1,6 +1,7 @@
 package at.carcar.carcarbackend.Car;
 
 import at.carcar.carcarbackend.Report.Report;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -82,6 +83,7 @@ public class Car {
         this.id = id;
     }
 
+    @JsonProperty("carID")
     public Long getId() {
         return id;
     }

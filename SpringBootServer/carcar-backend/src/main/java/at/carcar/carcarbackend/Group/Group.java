@@ -2,6 +2,7 @@ package at.carcar.carcarbackend.Group;
 
 import at.carcar.carcarbackend.Car.Car;
 import at.carcar.carcarbackend.User.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,8 +16,6 @@ public class Group {
             strategy = GenerationType.IDENTITY
     )
     private long id;
-//    @ManyToMany(mappedBy = "groups")
-//    private List<User> users;
 
     @ManyToMany
     @JoinTable(
@@ -35,12 +34,7 @@ public class Group {
 
     //private List<User> pendingRequests;
 
-    public Group(long groupID, String name, User admin, List<User> users, List<Car> cars) {
-        this.id = groupID;
-        this.name = name;
-        this.admin = admin;
-        this.users = users;
-        this.cars = cars;
+    public Group() {
     }
 
     public Group(String name, User admin, List<User> users, List<Car> cars) {
@@ -50,12 +44,13 @@ public class Group {
         this.cars = cars;
     }
 
-    public Group() {
-
-    }
-
     public String getName() {
         return name;
+    }
+
+    @JsonProperty("groupID")
+    public long getId() {
+        return id;
     }
 
     public List<User> getUsers() {
@@ -78,20 +73,12 @@ public class Group {
         this.admin = admin;
     }
 
-    public void deleteGroup() {
-        // Implement group deletion functionality
+    public boolean addUser(User user) {
+        return users.add(user);
     }
 
-    public void inviteUser(int userID) {
-        // Implement functionality to invite a user to the group
-    }
-
-    public void manageRequest(User user) {
-        // Implement functionality to manage user requests
-    }
-
-    public void removeUser(User user) {
-        // Implement functionality to remove a user from the group
+    public boolean removeUser(User user) {
+        return users.remove(user);
     }
 
     public boolean addCar(Car car) {

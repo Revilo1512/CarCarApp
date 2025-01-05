@@ -42,7 +42,7 @@ public class AllConfig {
 
     private List<User> listOfUsers() {
         return List.of(
-                new User("Peter",
+                new User("Peter Nis",
                         "p.nis@gmail.com",
                         passwordEncoder.encode("pnis")
                 ),
@@ -80,7 +80,7 @@ public class AllConfig {
                         "Up",
                         true),
 
-                new Car("Der Dicke",
+                new Car("Der Massive",
                         "Dodge",
                         "RAM",
                         true),
@@ -98,7 +98,7 @@ public class AllConfig {
                         List.of(users.get(1), users.get(2)),
                         List.of(cars.get(0), cars.get(1))),
 
-                new Group("Die Geilen",
+                new Group("Die App ist mega - Gruppe!",
                         users.get(3),
                         List.of(users.get(4), users.get(5)),
                         List.of(cars.get(2)))
