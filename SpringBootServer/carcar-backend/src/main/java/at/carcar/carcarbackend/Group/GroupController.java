@@ -133,5 +133,23 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
+
+    // Get All Groups of User
+    @GetMapping("/groupsOfUser")
+    public ResponseEntity<?> getAllGroupsOfUser(@RequestParam Long userID) {
+        List<Group> groups;
+
+        try {
+            groups = service.findAllGroupswithUser(userID);
+
+            if (groups.size() > 0) {
+                return ResponseEntity.status(HttpStatus.OK).body(groups);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No Group with User: ID=" + userID + " found!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
 }
 

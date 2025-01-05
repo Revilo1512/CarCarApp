@@ -5,6 +5,7 @@ import at.carcar.carcarbackend.User.User;
 import at.carcar.carcarbackend.User.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -105,5 +106,25 @@ public class GroupService {
         groupRepository.save(group);
 
         return group;
+    }
+
+    public List<Group> findAllGroupswithUser(Long userID) {
+        List<Group> allGroups = groupRepository.findAll();
+        List<Group> userInGroups = new ArrayList<>();
+
+        for (Group g : allGroups) {
+            if (g.getAdmin().getId() == userID) {
+                userInGroups.add(g);
+            } else {
+                for (User u : g.getUsers()) {
+                    if (u.getId() == userID) {
+                        userInGroups.add(g);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return userInGroups;
     }
 }
