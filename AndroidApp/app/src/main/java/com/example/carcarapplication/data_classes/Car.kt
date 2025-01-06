@@ -8,6 +8,6 @@ data class Car(
     val brand : String,
     val model : String,
     val availabilityStatus : Boolean,
-    val reports : List<Report>,
-    val trips : List<Trip>
+    val reports : List<Report>?,
+    val trips : List<Trip>?
 ) : Serializable

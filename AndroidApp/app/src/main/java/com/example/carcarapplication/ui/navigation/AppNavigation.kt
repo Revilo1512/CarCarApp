@@ -24,6 +24,7 @@ import com.example.carcarapplication.ui.HomeScreen
 import com.example.carcarapplication.ui.components.DrawerContent
 import kotlinx.coroutines.launch
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.carcarapplication.R
 import com.example.carcarapplication.TestValues
 
@@ -50,6 +51,14 @@ fun AppNavigation(navController: NavHostController, user: User) {
                         },
                         onNavigateToGroup = {
                             navController.navigate("group")
+                            scope.launch { drawerState.close() }
+                        },
+                        onNavigateToUserSettings = {
+                            navController.navigate("user settings")
+                            scope.launch { drawerState.close() }
+                        },
+                        onNavigateLogOut = {
+                            navController.navigate("login")
                             scope.launch { drawerState.close() }
                         }
                     )
@@ -100,7 +109,7 @@ fun AppNavigation(navController: NavHostController, user: User) {
 @Preview(showBackground = true)
 fun AppNavigationPreview() {
     // Mock NavHostController for preview purposes
-    val navController = androidx.navigation.compose.rememberNavController()
+    val navController = rememberNavController()
 
     AppNavigation(navController = navController, user = TestValues.getUser())
 }

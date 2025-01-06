@@ -1,5 +1,7 @@
 package com.example.carcarapplication
 
+import com.example.carcarapplication.data_classes.Car
+import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.data_classes.User
 import java.time.LocalDateTime
@@ -11,6 +13,36 @@ object TestValues {
         email = "testuser@email.com",
         pendingInvites = listOf()
     )
+
+    private val testGroups = listOf(
+        Group(
+            groupID = 1,
+            name = "Hawk Tours",
+            admin = getUser(),
+            members = listOf(getUser()),
+            cars = listOf(getCar()),
+            pendingRequests = emptyList()
+        ),
+        Group(
+            groupID = 2,
+            name = "Familie Schnürschuh",
+            admin = getUser(),
+            members = listOf(getUser()),
+            cars = listOf(getCar()),
+            pendingRequests = emptyList()
+        )
+    )
+    
+    private val testCar = Car(
+        carID = 1,
+        carName = "McQueen",
+        brand = "Fast",
+        model = "Quickest",
+        availabilityStatus = true,
+        reports = emptyList(),
+        trips = getTrips()
+    )
+    
 
     private val testTrips = listOf(
         Trip(
@@ -53,7 +85,15 @@ object TestValues {
     fun getUser(): User {
         return testUser
     }
+    
+    fun getGroups(): List<Group> {
+        return testGroups
+    }
 
+    fun getCar(): Car {
+        return testCar
+    }
+    
     fun getTrips(): List<Trip> {
         return testTrips
     }
