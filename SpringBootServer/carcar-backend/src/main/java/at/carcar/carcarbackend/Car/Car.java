@@ -1,7 +1,11 @@
 package at.carcar.carcarbackend.Car;
 
 import at.carcar.carcarbackend.Report.Report;
+import at.carcar.carcarbackend.Reservation.Reservation;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "cars")
@@ -16,14 +20,10 @@ public class Car {
     private String brand;
     private String model;
     private boolean availabilityStatus;
+    @OneToMany
+    private List<Reservation> reservations;
 
-    public Car(int id, String carName, String brand, String model, boolean availabilityStatus) {
-        this.id = id;
-        this.carName = carName;
-        this.brand = brand;
-        this.model = model;
-        this.availabilityStatus = availabilityStatus;
-    }
+
     public Car(String carName, String brand, String model, boolean availabilityStatus) {
         this.carName = carName;
         this.brand = brand;
@@ -33,6 +33,10 @@ public class Car {
 
     public Car() {
 
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
     public String getBrand() {
@@ -82,6 +86,7 @@ public class Car {
         this.id = id;
     }
 
+    @JsonProperty("carID")
     public Long getId() {
         return id;
     }

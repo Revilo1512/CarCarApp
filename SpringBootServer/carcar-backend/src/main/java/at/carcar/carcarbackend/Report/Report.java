@@ -2,6 +2,7 @@ package at.carcar.carcarbackend.Report;
 
 import at.carcar.carcarbackend.Trip.Trip;
 import at.carcar.carcarbackend.User.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -56,4 +57,20 @@ public abstract class Report {
         //
     }
 
+    @JsonProperty("reportID")
+    public long getId() {
+        return id;
+    }
+
+    public User getAuthor_user() {
+        return author_user;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

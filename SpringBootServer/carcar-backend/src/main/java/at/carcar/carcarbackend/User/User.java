@@ -1,6 +1,7 @@
 package at.carcar.carcarbackend.User;
 
 import at.carcar.carcarbackend.Group.Group;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 
@@ -20,13 +21,6 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_groups",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "group_id")
-//    )
-//    private List<Group> groups;
 
     @ManyToMany(mappedBy = "users")
     private List<Group> groups;
@@ -45,6 +39,7 @@ public class User {
         this.name = name;
     }
 
+    @JsonProperty("userID")
     public long getId() {
         return id;
     }

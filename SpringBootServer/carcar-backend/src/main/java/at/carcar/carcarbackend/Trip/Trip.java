@@ -2,6 +2,7 @@ package at.carcar.carcarbackend.Trip;
 
 import at.carcar.carcarbackend.Car.Car;
 import at.carcar.carcarbackend.User.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -51,6 +52,7 @@ public class Trip {
         this.user = user;
     }
 
+    @JsonProperty("tripID")
     public long getId() {
         return id;
     }

@@ -5,6 +5,7 @@ import at.carcar.carcarbackend.User.User;
 import at.carcar.carcarbackend.User.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -28,9 +29,9 @@ public class GroupService {
     }
 
     // Gruppe erstellen
-    public Group createGroup(Long userID, String groupName) {
-        User user = userRepository.findUserById(userID).orElseThrow(() -> new IllegalStateException(
-                "User with ID: " + userID + " does not exist!"));
+    public Group createGroup(Long adminID, String groupName) {
+        User user = userRepository.findUserById(adminID).orElseThrow(() -> new IllegalStateException(
+                "User with ID: " + adminID + " does not exist!"));
 
         Group group;
 
@@ -74,15 +75,56 @@ public class GroupService {
 
         if (!group.removeCar(car)) throw new IllegalStateException("Failed to remove Car from Group!");
 
-        Group newGroup = new Group(groupID, group.getName(), group.getAdmin(), group.getUsers(), group.getCars());
-
         groupRepository.save(group);
-//        System.out.println(group);
-//        groupRepository.deleteById(groupID);
-//        System.out.println("Eins");
-//        System.out.println(newGroup);
-//        groupRepository.save(newGroup);
 
         return group;
+    }
+
+    public Group addUser(Long groupID, Long userID) {
+        Group group = groupRepository.findGroupById(groupID).orElseThrow(() -> new IllegalStateException(
+                "Group with ID: " + groupID + " does not exist!"));
+
+        User user = userRepository.findUserById(userID).orElseThrow(() -> new IllegalStateException(
+                "User with ID: " + userID + " does not exist!"));
+
+        if (!group.addUser(user)) throw new IllegalStateException("Failed to add User to Group!");
+
+        groupRepository.save(group);
+
+        return group;
+    }
+
+    public Group removeUser(Long groupID, Long userID) {
+        Group group = groupRepository.findGroupById(groupID).orElseThrow(() -> new IllegalStateException(
+                "Group with ID: " + groupID + " does not exist!"));
+
+        User user = userRepository.findUserById(userID).orElseThrow(() -> new IllegalStateException(
+                "User with ID: " + userID + " does not exist!"));
+
+        if (!group.removeUser(user)) throw new IllegalStateException("Failed to remove User from Group!");
+
+        groupRepository.save(group);
+
+        return group;
+    }
+
+    public List<Group> findAllGroupswithUser(Long userID) {
+        List<Group> allGroups = groupRepository.findAll();
+        List<Group> userInGroups = new ArrayList<>();
+
+        for (Group g : allGroups) {
+            if (g.getAdmin().getId() == userID) {
+                userInGroups.add(g);
+            } else {
+                for (User u : g.getUsers()) {
+                    if (u.getId() == userID) {
+                        userInGroups.add(g);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return userInGroups;
     }
 }
