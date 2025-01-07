@@ -2,32 +2,32 @@ package com.example.carcarapplication.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.carcarapplication.TestValues.getGroups
 import com.example.carcarapplication.TestValues.getUser
+import com.example.carcarapplication.data_classes.Group
 
 @Composable
 fun DrawerContent(
+    groups: List<Group>,
     onNavigateToHome: () -> Unit,
-    onNavigateToGroup: () -> Unit,
+    onNavigateToGroup: (String) -> Unit,
     onNavigateToUserSettings: () -> Unit,
     onNavigateLogOut: () -> Unit
 ) {
-    val user = getUser() //This is an ugly solution probable even stupid; Should be removed with state or ViewModel
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,6 +35,9 @@ fun DrawerContent(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         //Top Section
+
+        val user = getUser() //This is an ugly solution probable even stupid; Should be removed with state or ViewModel
+
         Column{
             Text(
                 text = user.username,
@@ -59,23 +62,44 @@ fun DrawerContent(
                 }
             }
 
-            TextButton(onClick = onNavigateToGroup) {
-                Row (verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Person, //Need a better icon for that
-                        contentDescription = "Select Group",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Group",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowUp,
-                        contentDescription = "Dropdownthing",
-                        modifier = Modifier.size(24.dp)
-                    )
+            // Dropdown Menu for Groups
+            var expanded by remember { mutableStateOf(false) }
+            var selectedGroup by remember { mutableStateOf(groups.firstOrNull() ?: "No Groups") }
+
+            Box{
+                TextButton(onClick = { expanded = !expanded }) {
+                    Row (verticalAlignment = Alignment.CenterVertically){
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Group",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Your Groups",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    groups.forEach { group ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = group.name,
+                                    style = MaterialTheme.typography.titleMedium,
+                                ) },
+                            onClick = {
+                                selectedGroup = group
+                                expanded = false
+                                onNavigateToGroup(group.name)
+                            }
+                        )
+                    }
                 }
             }
 
@@ -114,7 +138,8 @@ fun PreviewDrawerContent() {
             onNavigateToHome = { /* Do nothing */ },
             onNavigateToGroup = { /* Do nothing */ },
             onNavigateToUserSettings = { /* Do nothing */ },
-            onNavigateLogOut = { /* Do nothing */ }
+            onNavigateLogOut = { /* Do nothing */ },
+            groups = getGroups()
         )
     }
 }

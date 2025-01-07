@@ -32,6 +32,31 @@ object TestValues {
             pendingRequests = emptyList()
         )
     )
+
+    private val testMembers = listOf(
+        User(
+        userID = 1,
+        username = "Alex",
+        email = "Alex@email.com",
+        pendingInvites = listOf()
+        ),
+        User(
+            userID = 2,
+            username = "Greg",
+            email = "Greg@email.com",
+            pendingInvites = listOf()
+        ),
+        User(
+            userID = 3,
+            username = "Jeremy",
+            email = "Jeremy@email.com",
+            pendingInvites = listOf()
+        )
+    )
+
+    private fun getMembers(): List<User>{
+        return testMembers
+    }
     
     private val testCar = Car(
         carID = 1,
@@ -41,6 +66,36 @@ object TestValues {
         availabilityStatus = true,
         reports = emptyList(),
         trips = getTrips()
+    )
+
+    private val testCars = listOf(
+        Car(
+            carID = 1,
+            carName = "McQueen",
+            brand = "Fast",
+            model = "Quickest",
+            availabilityStatus = true,
+            reports = emptyList(),
+            trips = getTrips()
+        ),
+        Car(
+            carID = 2,
+            carName = "Reidiga Ford",
+            brand = "Ford",
+            model = "Galaxy",
+            availabilityStatus = false,
+            reports = emptyList(),
+            trips = getTrips()
+        ),
+        Car(
+            carID = 3,
+            carName = "Bathmorgihni",
+            brand = "Lambo",
+            model = "Showerhead",
+            availabilityStatus = true,
+            reports = emptyList(),
+            trips = getTrips()
+        )
     )
     
 
@@ -90,8 +145,17 @@ object TestValues {
         return testGroups
     }
 
+    fun getSingleGroup(): Group{
+        val groups = getGroups()
+        return groups[0]
+    }
+
     fun getCar(): Car {
         return testCar
+    }
+
+    fun getCars(): List<Car> {
+        return testCars
     }
     
     fun getTrips(): List<Trip> {

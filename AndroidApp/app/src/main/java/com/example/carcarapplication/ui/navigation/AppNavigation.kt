@@ -19,20 +19,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.carcarapplication.data_classes.User
-import com.example.carcarapplication.ui.GroupScreen
-import com.example.carcarapplication.ui.HomeScreen
+import com.example.carcarapplication.ui.screens.GroupScreen
+import com.example.carcarapplication.ui.screens.HomeScreen
 import com.example.carcarapplication.ui.components.DrawerContent
 import kotlinx.coroutines.launch
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.carcarapplication.R
 import com.example.carcarapplication.TestValues
+import com.example.carcarapplication.ui.screens.UserSettingsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(navController: NavHostController, user: User) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val groups = TestValues.getGroups()
 
     Box {
         ModalNavigationDrawer(
@@ -49,8 +51,8 @@ fun AppNavigation(navController: NavHostController, user: User) {
                             navController.navigate("home")
                             scope.launch { drawerState.close() }
                         },
-                        onNavigateToGroup = {
-                            navController.navigate("group")
+                        onNavigateToGroup = { groupName ->
+                            navController.navigate("group/$groupName")
                             scope.launch { drawerState.close() }
                         },
                         onNavigateToUserSettings = {
@@ -60,7 +62,8 @@ fun AppNavigation(navController: NavHostController, user: User) {
                         onNavigateLogOut = {
                             navController.navigate("login")
                             scope.launch { drawerState.close() }
-                        }
+                        },
+                        groups = groups
                     )
                 }
             }
@@ -96,8 +99,12 @@ fun AppNavigation(navController: NavHostController, user: User) {
                     composable("home") {
                         HomeScreen(user = user)
                     }
-                    composable("group") {
-                        GroupScreen()
+                    composable("group/{groupName}") { backStackEntry ->
+                        val groupName = backStackEntry.arguments?.getString("groupName") ?: "Unknown Group"
+                        GroupScreen(groupName = groupName)
+                    }
+                    composable("user settings"){
+                        UserSettingsScreen()
                     }
                 }
             }
