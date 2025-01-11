@@ -2,16 +2,30 @@ package com.example.carcarapplication.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -20,44 +34,101 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.carcarapplication.TestValues
 import com.example.carcarapplication.data_classes.Car
+import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.data_classes.User
+import com.example.carcarapplication.ui.utils.isAvailable
+import com.example.carcarapplication.ui.utils.promoteToAdmin
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 //This file contains Items used in columns for the Home and Group Screen
 
 @Composable
-fun UserItem(user: User) {
+fun UserItem(
+    user: User,
+    group: Group,
+    adminView: Boolean,
+    isAdmin: Boolean,
+    onPromoteToAdmin: (User) -> Unit,
+    onRemoveUser: (User) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
     Card (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp),
+            .padding(horizontal = 4.dp)
+            .clickable(
+                onClick = { expanded = true }
+            ),
         shape = MaterialTheme.shapes.medium
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row (
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = user.username,
-                style = MaterialTheme.typography.titleSmall
-            )
-            Text(
-                text = user.email,
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = user.username,
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    if (isAdmin) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Admin Star"
+                        )
+                    }
+                }
+                Text(
+                    text = user.email,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            if (adminView) {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    if (!isAdmin){
+                        DropdownMenuItem(
+                            text = { Text("Promote to Admin") },
+                            onClick = {
+                                expanded = false
+                                promoteToAdmin(group, user)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Remove User") },
+                            onClick = {
+                                expanded = false
+                                onRemoveUser(user)
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
-fun CarItem(car: Car) {
+fun CarItem(
+    car: Car,
+    currentTime: LocalDateTime
+) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 4.dp)
             .border(
                 width = 2.dp,
-                color = if (car.availabilityStatus) Color.Black else Color.Red,
+                color = if (isAvailable(currentTime,car.trips)) Color.Black else Color.Red,
                 shape = MaterialTheme.shapes.medium
             ),
         shape = MaterialTheme.shapes.medium
@@ -130,7 +201,15 @@ fun CarCarouselItem(carImage: Int) {
 @Composable
 fun PreviewUserItem() {
     val user: User = TestValues.getUser()
-    UserItem(user = user)
+    val group: Group = TestValues.getSingleGroup()
+    UserItem(
+        user = user,
+        group = group,
+        adminView = true,
+        isAdmin = true,
+        onPromoteToAdmin = {},
+        onRemoveUser = {}
+    )
 }
 
 // Preview for CarItem
@@ -138,7 +217,7 @@ fun PreviewUserItem() {
 @Composable
 fun PreviewCarItem() {
     val car: Car = TestValues.getCar()
-    CarItem(car = car)
+    CarItem(car = car, currentTime = LocalDateTime.now())
 }
 
 // Preview for TripItem

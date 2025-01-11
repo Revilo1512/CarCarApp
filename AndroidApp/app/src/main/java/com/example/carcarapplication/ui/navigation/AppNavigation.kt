@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.carcarapplication.R
 import com.example.carcarapplication.TestValues
+import com.example.carcarapplication.TestValues.getUser
 import com.example.carcarapplication.ui.screens.UserSettingsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,7 +102,7 @@ fun AppNavigation(navController: NavHostController, user: User) {
                     }
                     composable("group/{groupName}") { backStackEntry ->
                         val groupName = backStackEntry.arguments?.getString("groupName") ?: "Unknown Group"
-                        GroupScreen(groupName = groupName)
+                        GroupScreen(groupName = groupName, currentUser = getUser())
                     }
                     composable("user settings"){
                         UserSettingsScreen()
@@ -118,5 +119,5 @@ fun AppNavigationPreview() {
     // Mock NavHostController for preview purposes
     val navController = rememberNavController()
 
-    AppNavigation(navController = navController, user = TestValues.getUser())
+    AppNavigation(navController = navController, user = getUser())
 }

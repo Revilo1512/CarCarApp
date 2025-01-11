@@ -14,31 +14,12 @@ object TestValues {
         pendingInvites = listOf()
     )
 
-    private val testGroups = listOf(
-        Group(
-            groupID = 1,
-            name = "Hawk Tours",
-            admin = getUser(),
-            members = listOf(getUser()),
-            cars = listOf(getCar()),
-            pendingRequests = emptyList()
-        ),
-        Group(
-            groupID = 2,
-            name = "Familie Schnürschuh",
-            admin = getUser(),
-            members = listOf(getUser()),
-            cars = listOf(getCar()),
-            pendingRequests = emptyList()
-        )
-    )
-
     private val testMembers = listOf(
         User(
-        userID = 1,
-        username = "Alex",
-        email = "Alex@email.com",
-        pendingInvites = listOf()
+            userID = 1,
+            username = "Alex",
+            email = "Alex@email.com",
+            pendingInvites = listOf()
         ),
         User(
             userID = 2,
@@ -57,6 +38,25 @@ object TestValues {
     private fun getMembers(): List<User>{
         return testMembers
     }
+
+    private val testGroups = listOf(
+        Group(
+            groupID = 1,
+            name = "Hawk Tours",
+            admin = getMembers()[0],
+            members = getMembers(),
+            cars = listOf(getCar()),
+            pendingRequests = emptyList()
+        ),
+        Group(
+            groupID = 2,
+            name = "Familie Schnürschuh",
+            admin = getUser(),
+            members = listOf(getUser()),
+            cars = listOf(getCar()),
+            pendingRequests = emptyList()
+        )
+    )
     
     private val testCar = Car(
         carID = 1,
@@ -102,15 +102,15 @@ object TestValues {
     private val testTrips = listOf(
         Trip(
             tripID = 1,
-            startTime = LocalDateTime.of(2025, 1, 5, 9, 45),
-            endTime = LocalDateTime.of(2025, 1, 5, 13, 0),
+            startTime = LocalDateTime.of(2025, 1, 11, 20, 0),
+            endTime = LocalDateTime.of(2025, 1, 11, 22, 0),
             distance = 10.5,
             fuelUsed = 1.4
         ),
         Trip(
             tripID = 2,
-            startTime = LocalDateTime.of(2025, 1, 6, 9, 45),
-            endTime = LocalDateTime.of(2025, 1, 6, 15, 0),
+            startTime = LocalDateTime.of(2025, 1, 12, 9, 45),
+            endTime = LocalDateTime.of(2025, 1, 12, 15, 0),
             distance = 10.5,
             fuelUsed = 1.4
         ),

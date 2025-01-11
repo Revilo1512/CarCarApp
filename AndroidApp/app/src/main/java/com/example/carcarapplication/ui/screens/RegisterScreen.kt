@@ -34,7 +34,6 @@ import com.example.carcarapplication.MainActivity
 import com.example.carcarapplication.R
 import com.example.carcarapplication.api_helpers.ApiService
 import com.example.carcarapplication.api_helpers.RetrofitClient
-import com.example.carcarapplication.data_classes.User
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -53,7 +52,7 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.carcarpicto),
+            painter = painterResource(id = R.drawable.carcaricon),
             contentDescription = "bitmap",
             contentScale = ContentScale.Fit,
             modifier = Modifier
