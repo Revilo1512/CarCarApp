@@ -55,14 +55,14 @@ fun HomeScreen(user: User) {
 
             // SCHEDULE SECTION
             Text(
-                text = "Your trips",
+                text = "Your upcoming trips",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 200.dp)
+                    .heightIn(max = 500.dp)
             ) {
                 items(trips.take(4)) { trip ->
                     TripItem(trip = trip)

@@ -55,7 +55,7 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
             .fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.carcarpicto),
+            painter = painterResource(id = R.drawable.carcaricon),
             contentDescription = "bitmap",
             contentScale = ContentScale.Fit,
             modifier = Modifier
