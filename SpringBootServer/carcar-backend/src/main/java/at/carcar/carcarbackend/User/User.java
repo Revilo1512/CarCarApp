@@ -22,9 +22,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(mappedBy = "users")
-    private List<Group> groups;
-
     public User() {
 
     }
@@ -60,16 +57,6 @@ public class User {
         this.password = password;
     }
 
-    public void login() {
-        // Implement login functionality
-    }
-
-    public Group createGroup(String name) {
-        // Implement group creation functionality
-        //return new Group();
-        return null;
-    }
-
     public void leaveGroup(int groupID) {
         // Implement functionality to leave a group
     }
@@ -93,7 +80,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", groups=" + groups +
+                ", groups=" + "groups" +
                 '}';
     }
 }

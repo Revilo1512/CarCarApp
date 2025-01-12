@@ -2,9 +2,11 @@ package at.carcar.carcarbackend.Car;
 
 import at.carcar.carcarbackend.Report.Report;
 import at.carcar.carcarbackend.Reservation.Reservation;
+import at.carcar.carcarbackend.Trip.Trip;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,7 +22,11 @@ public class Car {
     private String brand;
     private String model;
     private boolean availabilityStatus;
-    @OneToMany
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    private List<Report> reports = new ArrayList<>();
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    private List<Trip> trips = new ArrayList<>();
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
 
@@ -89,5 +95,12 @@ public class Car {
     @JsonProperty("carID")
     public Long getId() {
         return id;
+    }
+
+    public void addTrip(Trip trip) {
+        this.trips.add(trip);
+    }
+    public void addReport(Report rep) {
+        this.reports.add(rep);
     }
 }
