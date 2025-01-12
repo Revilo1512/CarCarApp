@@ -73,7 +73,7 @@ fun UserItem(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = user.username,
+                        text = user.name,
                         style = MaterialTheme.typography.titleSmall
                     )
                     if (isAdmin) {
@@ -89,7 +89,7 @@ fun UserItem(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            if (adminView) {
+            if (!adminView) {
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
@@ -128,7 +128,7 @@ fun CarItem(
             .padding(horizontal = 4.dp)
             .border(
                 width = 2.dp,
-                color = if (isAvailable(currentTime,car.trips)) Color.Black else Color.Red,
+                color = if (isAvailable(currentTime,car.reservations)) Color.Black else Color.Red,
                 shape = MaterialTheme.shapes.medium
             ),
         shape = MaterialTheme.shapes.medium

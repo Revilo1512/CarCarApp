@@ -1,5 +1,7 @@
 package com.example.carcarapplication.ui.navigation
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -24,7 +27,10 @@ import com.example.carcarapplication.ui.screens.HomeScreen
 import com.example.carcarapplication.ui.components.DrawerContent
 import kotlinx.coroutines.launch
 import androidx.compose.ui.unit.dp
+import androidx.navigation.ActivityNavigator
 import androidx.navigation.compose.rememberNavController
+import com.example.carcarapplication.LoginActivity
+import com.example.carcarapplication.MainActivity
 import com.example.carcarapplication.R
 import com.example.carcarapplication.TestValues
 import com.example.carcarapplication.TestValues.getUser
@@ -36,6 +42,7 @@ fun AppNavigation(navController: NavHostController, user: User) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val groups = TestValues.getGroups()
+    val context = LocalContext.current
 
     Box {
         ModalNavigationDrawer(
@@ -61,8 +68,11 @@ fun AppNavigation(navController: NavHostController, user: User) {
                             scope.launch { drawerState.close() }
                         },
                         onNavigateLogOut = {
-                            navController.navigate("login")
                             scope.launch { drawerState.close() }
+                            val intent = Intent(context, LoginActivity::class.java).apply {}
+                            context.startActivity(intent)
+                            //navController.navigate("login")
+                            //scope.launch { drawerState.close() }
                         },
                         groups = groups
                     )

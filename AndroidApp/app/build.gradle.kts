@@ -52,9 +52,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.retrofit)
     implementation(libs.moshi)
+    implementation(libs.moshi.kotlin.codegen)
     implementation(libs.squareup.moshi.kotlin)
     implementation(libs.converter.moshi)
     implementation(libs.retrofit2.converter.moshi)
+    implementation(libs.moshi.adapters.v1150)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -62,4 +64,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
 }

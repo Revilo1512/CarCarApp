@@ -1,12 +1,14 @@
 package com.example.carcarapplication.data_classes
 
+import com.squareup.moshi.JsonClass
 import java.io.Serializable
 
+@JsonClass(generateAdapter = true)
 data class Group(
-    val groupID : Long,
+    val id : Long?,
+    val users: List<User>, // Default to an empty list
+    val cars: List<Car>?,
     val name : String,
     val admin : User,
-    val members : List<User>,
-    val cars : List<Car>,
-    val pendingRequests : List<User>
+    // val pendingRequests : List<User>
 ) : Serializable

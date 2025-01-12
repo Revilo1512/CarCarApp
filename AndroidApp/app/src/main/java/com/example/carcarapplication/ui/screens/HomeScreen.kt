@@ -48,7 +48,7 @@ fun HomeScreen(user: User) {
                 .fillMaxSize()
         ) {
             Text(
-                text = "$greeting, ${user.username}!",
+                text = "${greeting}, ${user.name}!",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -91,6 +91,7 @@ fun HomeScreen(user: User) {
                 }
             }
         }
+
         FAB(
             onClick = {},
             modifier = Modifier

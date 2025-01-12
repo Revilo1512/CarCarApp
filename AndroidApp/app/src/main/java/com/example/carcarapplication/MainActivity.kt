@@ -1,7 +1,6 @@
 package com.example.carcarapplication
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
@@ -13,13 +12,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            val user = intent.getSerializableExtra("user") as? User
 
-            user?.let {
-                AppNavigation(navController = navController, user = user)
-            } ?: run {
-                Toast.makeText(this, "User data unavailable", Toast.LENGTH_SHORT).show()
-            }
+            @Suppress("DEPRECATION")
+            val user = intent.getSerializableExtra("user") as User
+
+            AppNavigation(navController = navController, user = user)
         }
     }
 }

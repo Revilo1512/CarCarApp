@@ -1,7 +1,7 @@
 package com.example.carcarapplication.ui.screens
 
-import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
@@ -33,20 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.carcarapplication.MainActivity
 import com.example.carcarapplication.R
-import com.example.carcarapplication.TestValues
-import com.example.carcarapplication.api_helpers.ApiService
 import com.example.carcarapplication.api_helpers.RetrofitClient
-import com.example.carcarapplication.data_classes.User
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 @Composable
 fun LoginScreen(onNavigateToRegister: () -> Unit) {
-    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loading by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val apiService = RetrofitClient.instance.create(ApiService::class.java)
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -64,9 +60,9 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
         )
 
         OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
             singleLine = true
         )
 
@@ -87,13 +83,18 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
                     loading = true
                     (context as? ComponentActivity)?.lifecycleScope?.launch {
                         try {
-                            val user = apiService.getUser(username, password)
+                            val user = RetrofitClient.apiService.getUser(email, password)
                             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
-                            startMainActivity(user = user, context)
+                            val intent = Intent(context, MainActivity::class.java).apply {
+                                putExtra("user", user)
+                            }
+                            context.startActivity(intent)
                         } catch (e: HttpException) {
-                            Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()
+                            Log.e("LoginScreen", "Login failed: ${e.message()}")
+                            Toast.makeText(context, "Network error", Toast.LENGTH_SHORT).show()
                         } catch (e: Exception) {
-                            Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
+                            Log.e("LoginScreen", "An error occurred: ${e.message}")
+                            Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()
                         } finally {
                             loading = false
                         }
@@ -114,23 +115,5 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
                     onNavigateToRegister()
                 }
         )
-
-        Text(
-            text = "use test user",
-            textDecoration = TextDecoration.Underline,
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .clickable {
-                    startMainActivity(user = TestValues.getUser(), context)
-                }
-        )
     }
-}
-
-
-private fun startMainActivity(user : User, context: Context) {
-    val intent = Intent(context, MainActivity::class.java).apply {
-        putExtra("user", user)
-    }
-    context.startActivity(intent)
 }

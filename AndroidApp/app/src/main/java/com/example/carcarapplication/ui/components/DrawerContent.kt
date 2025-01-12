@@ -40,7 +40,7 @@ fun DrawerContent(
 
         Column{
             Text(
-                text = user.username,
+                text = user.name,
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 16.dp)
             )

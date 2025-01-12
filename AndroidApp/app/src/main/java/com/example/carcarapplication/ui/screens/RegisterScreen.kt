@@ -1,6 +1,7 @@
 package com.example.carcarapplication.ui.screens
 
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
@@ -32,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.carcarapplication.MainActivity
 import com.example.carcarapplication.R
-import com.example.carcarapplication.api_helpers.ApiService
 import com.example.carcarapplication.api_helpers.RetrofitClient
+import com.example.carcarapplication.data_classes.User
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -44,7 +45,6 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
     var password by remember { mutableStateOf("") }
     var loading by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val apiService = RetrofitClient.instance.create(ApiService::class.java)
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -90,18 +90,20 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
                 onClick = {
                     loading = true
                     (context as? ComponentActivity)?.lifecycleScope?.launch {
+                        val request = User(null, username, email, password)
                         try {
-                            val user = apiService.postUser(username, email, password)
-                            Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT)
-                                .show()
+                            val user = RetrofitClient.apiService.postUser(request)
+                            Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT).show()
                             val intent = Intent(context, MainActivity::class.java).apply {
                                 putExtra("user", user)
                             }
                             context.startActivity(intent)
                         } catch (e: HttpException) {
-                            Toast.makeText(context, "Registering failed", Toast.LENGTH_SHORT).show()
+                            Log.e("DataHelper", "Register failed: ${e.message()}")
+                            Toast.makeText(context, "Network error", Toast.LENGTH_SHORT).show()
                         } catch (e: Exception) {
-                            Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
+                            Log.e("DataHelper", "An error occurred: ${e.message}")
+                            Toast.makeText(context, "Register failed", Toast.LENGTH_SHORT).show()
                         } finally {
                             loading = false
                         }

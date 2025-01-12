@@ -9,29 +9,35 @@ import java.time.LocalDateTime
 object TestValues {
     private val testUser = User(
         userID = 9999999,
-        username = "testUser",
+        name = "testUser",
         email = "testuser@email.com",
-        pendingInvites = listOf()
+        password = "123",
+        //pendingInvites = listOf()
     )
 
     private val testMembers = listOf(
         User(
             userID = 1,
-            username = "Alex",
+            name = "Alex",
             email = "Alex@email.com",
-            pendingInvites = listOf()
+            password = "123",
+            //pendingInvites = listOf()
         ),
         User(
             userID = 2,
-            username = "Greg",
+            name = "Greg",
             email = "Greg@email.com",
-            pendingInvites = listOf()
+            password = "password"
+            //groups = emptyList()
+            //pendingInvites = listOf()
         ),
         User(
             userID = 3,
-            username = "Jeremy",
+            name = "Jeremy",
             email = "Jeremy@email.com",
-            pendingInvites = listOf()
+            password = "password"
+            //groups = emptyList()
+            //pendingInvites = listOf()
         )
     )
 
@@ -41,60 +47,64 @@ object TestValues {
 
     private val testGroups = listOf(
         Group(
-            groupID = 1,
+            id = 1,
             name = "Hawk Tours",
             admin = getMembers()[0],
-            members = getMembers(),
+            users = getMembers(),
             cars = listOf(getCar()),
-            pendingRequests = emptyList()
+            //pendingRequests = emptyList()
         ),
         Group(
-            groupID = 2,
+            id = 2,
             name = "Familie Schnürschuh",
             admin = getUser(),
-            members = listOf(getUser()),
+            users = listOf(getUser()),
             cars = listOf(getCar()),
-            pendingRequests = emptyList()
+            //pendingRequests = emptyList()
         )
     )
-    
+
     private val testCar = Car(
-        carID = 1,
+        id = 1,
         carName = "McQueen",
         brand = "Fast",
         model = "Quickest",
         availabilityStatus = true,
-        reports = emptyList(),
-        trips = getTrips()
+        reservations = emptyList()
+        //reports = emptyList(),
+        //trips = getTrips()
     )
 
     private val testCars = listOf(
         Car(
-            carID = 1,
+            id = 1,
             carName = "McQueen",
             brand = "Fast",
             model = "Quickest",
             availabilityStatus = true,
-            reports = emptyList(),
-            trips = getTrips()
+            reservations = emptyList()
+            //reports = emptyList(),
+            //trips = getTrips()
         ),
         Car(
-            carID = 2,
+            id = 2,
             carName = "Reidiga Ford",
             brand = "Ford",
             model = "Galaxy",
             availabilityStatus = false,
-            reports = emptyList(),
-            trips = getTrips()
+            reservations = emptyList()
+            //reports = emptyList(),
+            //trips = getTrips()
         ),
         Car(
-            carID = 3,
+            id = 3,
             carName = "Bathmorgihni",
             brand = "Lambo",
             model = "Showerhead",
             availabilityStatus = true,
-            reports = emptyList(),
-            trips = getTrips()
+            reservations = emptyList()
+            //reports = emptyList(),
+            //trips = getTrips()
         )
     )
     
@@ -105,42 +115,50 @@ object TestValues {
             startTime = LocalDateTime.of(2025, 1, 11, 20, 0),
             endTime = LocalDateTime.of(2025, 1, 11, 22, 0),
             distance = 10.5,
-            fuelUsed = 1.4
+            fuelUsed = 1.4,
+            car = testCar,
+            user = testUser
         ),
         Trip(
             tripID = 2,
             startTime = LocalDateTime.of(2025, 1, 12, 9, 45),
             endTime = LocalDateTime.of(2025, 1, 12, 15, 0),
             distance = 10.5,
-            fuelUsed = 1.4
+            fuelUsed = 1.4,
+            car = testCar,
+            user = testUser
         ),
         Trip(
             tripID = 3,
             startTime = LocalDateTime.of(2025, 1, 7, 9, 45),
             endTime = LocalDateTime.of(2025, 1, 7, 13, 0),
             distance = 10.5,
-            fuelUsed = 1.4
+            fuelUsed = 1.4,
+            car = testCar,
+            user = testUser
         ),
         Trip(
             tripID = 4,
             startTime = LocalDateTime.of(2025, 1, 8, 9, 45),
             endTime = LocalDateTime.of(2025, 1, 8, 13, 0),
             distance = 10.5,
-            fuelUsed = 1.4
+            fuelUsed = 1.4,
+            car = testCar,
+            user = testUser
         )
     )
 
     //These testvalues presumebly will end up in the whole "TestCar" data
-    private val favoriteCars = listOf(
-        R.drawable.car1,
-        R.drawable.car2,
-        R.drawable.car3
-    )
+
 
     fun getUser(): User {
         return testUser
     }
-    
+
+    private fun getUsers(): List<User> {
+        return testMembers
+    }
+
     fun getGroups(): List<Group> {
         return testGroups
     }
@@ -163,7 +181,7 @@ object TestValues {
     }
 
     fun getFavoriteCars(): List<Int> {
-        return favoriteCars
+        return listOf(R.drawable.car1, R.drawable.car2, R.drawable.car3)
     }
 }
 
