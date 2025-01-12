@@ -35,7 +35,7 @@ public class GroupService {
 
         Group group;
 
-        if (groupName != null && groupName.length() > 0) {
+        if (groupName != null && !groupName.isEmpty()) {
             group = new Group(groupName, user, List.of(), List.of());
             groupRepository.save(group);
         } else {
@@ -45,10 +45,13 @@ public class GroupService {
     }
 
     // Gruppe löschen
-    public void deleteGroup(Long groupID) {
-        groupRepository.findGroupById(groupID).orElseThrow(() -> new IllegalStateException(
+    public void deleteGroup(Long groupID, long adminID) {
+        Group group = groupRepository.findGroupById(groupID).orElseThrow(() -> new IllegalStateException(
                 "Group with ID: " + groupID + " does not exist!"));
 
+        if (group.getAdmin().getId() != adminID) {
+            throw new IllegalStateException("Only the admin can delete this group!");
+        }
         groupRepository.deleteById(groupID);
     }
 

@@ -1,5 +1,6 @@
 package at.carcar.carcarbackend.Report;
 
+import at.carcar.carcarbackend.Car.Car;
 import at.carcar.carcarbackend.Trip.Trip;
 import at.carcar.carcarbackend.User.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,6 +26,17 @@ public abstract class Report {
     @ManyToOne
     @JoinColumn(name = "trip_id")
     private Trip trip;
+    @ManyToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
 
     public Trip getTrip() {
         return trip;
@@ -34,20 +46,22 @@ public abstract class Report {
         this.trip = trip;
     }
 
-    public Report(int reportId, User author_user, Date date, String description, Trip trip) {
+    public Report(int reportId, User author_user, Date date, String description, Trip trip, Car car) {
         this.id = reportId;
         this.author_user = author_user;
         this.date = date;
         this.description = description;
         this.trip = trip;
+        this.car = car;
         //this.changeLog = new ArrayList<String>();
     }
 
-    public Report(User author_user, Date date, String description, Trip trip) {
+    public Report(User author_user, Date date, String description, Trip trip, Car car) {
         this.author_user = author_user;
         this.date = date;
         this.description = description;
         this.trip = trip;
+        this.car = car;
         //this.changeLog = new ArrayList<String>();
     }
     public Report(){

@@ -1,5 +1,6 @@
 package at.carcar.carcarbackend.Reservation;
 
+import at.carcar.carcarbackend.Car.Car;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -17,6 +18,17 @@ public class Reservation {
 
     private Date reservationStart;
     private Date reservationEnd;
+    @ManyToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
 
     public Reservation() {
     }

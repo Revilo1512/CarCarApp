@@ -58,7 +58,7 @@ public class GroupController {
     // Delete Group
     @DeleteMapping("/deleteGroup")
     public ResponseEntity<?> deleteGroup(@RequestParam Long groupID) {
-        service.deleteGroup(groupID);
+        service.deleteGroup(groupID,groupID);
         return ResponseEntity.status(HttpStatus.OK).body("Group successfully deleted!");
     }
 

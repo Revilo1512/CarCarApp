@@ -106,22 +106,26 @@ public class AllConfig {
     };
 
     private List<Trip> listOfTrips() {
-        return List.of(
-                new Trip(new Date(2024, 12, 1),
-                        new Date(2024, 12, 2),
-                        5,
-                        1,
-                        cars.get(0),
-                        users.get(0)),
+        Trip trip1 = new Trip(new Date(2024, 12, 1),
+                new Date(2024, 12, 2),
+                5,
+                1,
+                cars.get(0),
+                users.getFirst());  // This is where the car is associated with the trip
 
-                new Trip (new Date(2025, 1, 1),
-                        new Date (2025, 1, 2),
-                        100.5,
-                        5.4,
-                        cars.get(2),
-                        users.get(3))
-        );
-    };
+        Trip trip2 = new Trip(new Date(2025, 1, 1),
+                new Date(2025, 1, 2),
+                100.5,
+                5.4,
+                cars.get(2),
+                users.get(3));
+
+        // Add the trips to the cars' trips list
+        cars.get(0).addTrip(trip1);
+        cars.get(2).addTrip(trip2);
+
+        return List.of(trip1, trip2);
+    }
 
     private List<Report> listOfReports() {
         return List.of(
@@ -130,7 +134,7 @@ public class AllConfig {
                         "I bin dem Heisl hint'n eini'gfoan!!",
                         trips.get(0),
                         "Mei Auto is fui hinnig, der Schass!",
-                        List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag")),
+                        List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag"),cars.getFirst()),
 
                 new MaintenanceReport(users.get(3),
                         new Date(2025, 1, 2),
@@ -138,7 +142,7 @@ public class AllConfig {
                         trips.get(1),
                         "Der Tank woa fui la",
                         1000.7,
-                        List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag"))
+                        List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag"), cars.getLast())
 
         );
     };
@@ -147,11 +151,14 @@ public class AllConfig {
     CommandLineRunner commandLineRunner(UserRepository userRep, GroupRepository groupRep, CarRepository carRep,
                                         ReportRepository reportRep, TripRepository tripRep) {
         return args -> {
-            userRep.saveAll(users);
-            carRep.saveAll(cars);
-            groupRep.saveAll(groups);
-            tripRep.saveAll(trips);
-            reportRep.saveAll(reports);
+            if(!userRep.existsById(1L)){
+                userRep.saveAll(users);
+                carRep.saveAll(cars);
+                groupRep.saveAll(groups);
+                tripRep.saveAll(trips);
+                reportRep.saveAll(reports);
+            }
+
         };
     }
 }

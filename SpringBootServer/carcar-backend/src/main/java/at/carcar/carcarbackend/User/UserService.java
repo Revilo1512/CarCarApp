@@ -58,18 +58,18 @@ public class UserService {
                 "student with ID: " + userID + " does not exist!"
         ));
 
-        if (name != null && name.length() > 0 && !Objects.equals(user.getName(), name)) {
+        if (name != null && !name.isEmpty() && !Objects.equals(user.getName(), name)) {
             user.setName(name);
         }
 
-        if (email != null && email.length() > 0 && !Objects.equals(user.getEmail(), email)) {
+        if (email != null && !email.isEmpty() && !Objects.equals(user.getEmail(), email)) {
             if (userRepository.findUserByEmail(email).isPresent()) {
                 throw new IllegalStateException("email taken");
             }
             user.setEmail(email);
         }
 
-        if (password != null && password.length() > 0) {
+        if (password != null && !password.isEmpty()) {
             user.setPassword(passwordEncoder.encode(password));
         }
         return user;

@@ -1,4 +1,5 @@
 package at.carcar.carcarbackend.Report;
+import at.carcar.carcarbackend.Car.Car;
 import at.carcar.carcarbackend.Trip.Trip;
 import at.carcar.carcarbackend.User.User;
 import jakarta.persistence.ElementCollection;
@@ -13,14 +14,14 @@ public class DamageReport extends Report {
     @ElementCollection
     private List<String> damagePhotos;
 
-    public DamageReport(int reportId, User author_user, Date date, String description, Trip trip, String damageDetails, List<String> damagePhotos) {
-        super(reportId, author_user, date, description, trip);
+    public DamageReport(int reportId, User author_user, Date date, String description, Trip trip, String damageDetails, List<String> damagePhotos, Car car) {
+        super(reportId, author_user, date, description, trip, car);
         this.damageDetails = damageDetails;
         this.damagePhotos = damagePhotos;
     }
 
-    public DamageReport(User author_user, Date date, String description, Trip trip, String damageDetails, List<String> damagePhotos) {
-        super(author_user, date, description, trip);
+    public DamageReport(User author_user, Date date, String description, Trip trip, String damageDetails, List<String> damagePhotos, Car car) {
+        super(author_user, date, description, trip, car);
         this.damageDetails = damageDetails;
         this.damagePhotos = damagePhotos;
     }
