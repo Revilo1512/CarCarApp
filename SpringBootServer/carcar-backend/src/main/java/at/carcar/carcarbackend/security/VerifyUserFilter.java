@@ -44,14 +44,14 @@ public class VerifyUserFilter extends OncePerRequestFilter {
                 // No userId in session, unauthorized request
                 //System.out.println("USERID WRONG");
                 //response.getWriter().write("No valid ID in session");
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated. Invalid ID");
             }
         } else {
             // No session, unauthorized request
             //System.out.println("novalid sesison");
 
             //response.getWriter().write("No valid session");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated. No session found");
         }
     }
 

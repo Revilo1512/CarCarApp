@@ -49,9 +49,6 @@ public class GroupService {
         Group group = groupRepository.findGroupById(groupID).orElseThrow(() -> new IllegalStateException(
                 "Group with ID: " + groupID + " does not exist!"));
 
-        if (group.getAdmin().getId() != adminID) {
-            throw new IllegalStateException("Only the admin can delete this group!");
-        }
         groupRepository.deleteById(groupID);
     }
 
@@ -60,7 +57,7 @@ public class GroupService {
                 "Group with ID: " + groupID + " does not exist!"));
 
         Car car = carRepository.findById(carID).orElseThrow(() -> new IllegalStateException(
-                "Car with ID: " + carID + " does not exist!"));
+                "Car with ID: " + carID + " does not exist! Create the car first!"));
 
         if (!group.addCar(car)) throw new IllegalStateException("Failed to add Car to Group!");
 
@@ -111,7 +108,7 @@ public class GroupService {
         return group;
     }
 
-    public List<Group> findAllGroupswithUser(Long userID) {
+    public List<Group> findAllGroupsWithUser(Long userID) {
         List<Group> allGroups = groupRepository.findAll();
         List<Group> userInGroups = new ArrayList<>();
 
@@ -130,4 +127,27 @@ public class GroupService {
 
         return userInGroups;
     }
+
+    public Group changeAdmin(Long groupID, Long userID) {
+        // Fetch group and user
+        Group group = groupRepository.findGroupById(groupID).orElseThrow(() ->
+                new IllegalStateException("Group with ID: " + groupID + " does not exist"));
+
+        User user = userRepository.findUserById(userID).orElseThrow(() ->
+                new IllegalStateException("User with ID: " + userID + " does not exist"));
+
+        group.setAdmin(user);
+        groupRepository.save(group);
+
+        return group;
+    }
+
+
+    public boolean isUserInGroup(Long groupID, Long userID) {
+        Group group = groupRepository.findGroupById(groupID).orElseThrow(() ->
+                new IllegalStateException("Group with ID: " + groupID + " does not exist"));
+
+        return group.getUsers().stream().anyMatch(user -> user.getId() == userID);
+    }
+
 }

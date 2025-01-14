@@ -1,11 +1,16 @@
 package at.carcar.carcarbackend.User;
 
+import at.carcar.carcarbackend.security.AuthorizationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +19,11 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService service;
+    private final AuthorizationService authService;
     @Autowired //dependency injection shit wir generieren den Userservice magically oder so.
-    public UserController(UserService service){
+    public UserController(UserService service, AuthorizationService aserv){
         this.service=service;
+        authService = aserv;
     }
 
     // go to localhost:8080/user
@@ -37,67 +44,62 @@ public class UserController {
         }
         return ResponseEntity.ok(user.get());
     }
-    // Login
     @GetMapping("/login")
-    public ResponseEntity<?> getUser(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        User user = service.validateUser(email, password);
-        if (user != null) {
-            session.setAttribute("userId", user.getId());
-            return ResponseEntity.ok(user); // Return the user data
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
+        try {
+            User user = service.validateUser(email, password); // Ensure password is hashed and validated securely
+            if (user != null) {
+                session.setAttribute("userId", user.getId());
+
+                // Set the authentication in SecurityContext
+                Authentication authentication = new UsernamePasswordAuthenticationToken(user.getId(), null, new ArrayList<>());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                return ResponseEntity.ok(user); // Return user data
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
     // Register
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user, HttpSession session) {
-
-        User newUser;
+    public ResponseEntity<?> register(@RequestBody User user) {
         try {
-            newUser = service.registerUser(user);
+            User newUser = service.registerUser(user);
+
             if (newUser != null) {
-                session.setAttribute("userId", user.getId());
                 return ResponseEntity.status(HttpStatus.CREATED).body(newUser); // Return the created user
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed. Username or email already exists.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed. Username or email may already exist.");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
 
+
     // Modify
     @PutMapping("/modifyUser/{userID}")
     public ResponseEntity<?> modifyUser(@PathVariable long userID,
                                         @RequestParam(required = false) String name,
                                         @RequestParam(required = false) String email,
-                                        @RequestParam(required = false) String password,
-                                        HttpSession session) {
-        User newUser;
+                                        @RequestParam(required = false) String password) {
         try {
-            // Ensure session userId is not null and matches the userID in the request
-            Object sessionUserId = session.getAttribute("userId");
 
-            if (sessionUserId == null) {
-                throw new IllegalArgumentException("User is not logged in");
+            if (!authService.isSameUser(userID)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot modify user");
             }
 
-            // Compare the session userId (which is likely a String or Long) to the userID from the path
-            if (Long.parseLong(sessionUserId.toString()) != userID) {
-                throw new IllegalArgumentException("Cannot modify user");
-            }
-
-            // If authorization passed, proceed with modifying the user
-            newUser = service.modifyUser(userID, name, email, password);
+            // Authorization passed, modifying the user
+            User newUser = service.modifyUser(userID, name, email, password);
 
             if (newUser != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Modification failed");
             }
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
