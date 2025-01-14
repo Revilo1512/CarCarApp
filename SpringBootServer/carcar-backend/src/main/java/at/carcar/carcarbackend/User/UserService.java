@@ -55,7 +55,7 @@ public class UserService {
     @Transactional
     public User modifyUser(long userID, String name, String email, String password) {
         User user = userRepository.findUserById(userID).orElseThrow(() -> new IllegalStateException(
-                "student with ID: " + userID + " does not exist!"
+                "user with ID: " + userID + " does not exist!"
         ));
 
         if (name != null && !name.isEmpty() && !Objects.equals(user.getName(), name)) {

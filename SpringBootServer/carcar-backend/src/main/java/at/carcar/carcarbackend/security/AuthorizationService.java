@@ -20,4 +20,5 @@ public class AuthorizationService {
     public boolean isAdminOfGroup(Group group) {
         return getAuthenticatedUserId().equals(group.getAdmin().getId());
     }
+
 }

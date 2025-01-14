@@ -120,9 +120,6 @@ public class AllConfig {
                 cars.get(2),
                 users.get(3));
 
-        // Add the trips to the cars' trips list
-        cars.get(0).addTrip(trip1);
-        cars.get(2).addTrip(trip2);
 
         return List.of(trip1, trip2);
     }

@@ -18,4 +18,8 @@ public class TripService {
     public List<Trip> getAllTrips() {
         return tripRepository.findAll();
     }
+
+    public void createTrip(Trip trip) {
+
+    }
 }

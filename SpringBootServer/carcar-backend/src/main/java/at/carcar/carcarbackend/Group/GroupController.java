@@ -35,9 +35,14 @@ public class GroupController {
     @GetMapping("/{groupID}")
     public ResponseEntity<?> getGroupById(@PathVariable int groupID) {
         try{
-            // Maybe make necassery to be admin or user in group
+            System.out.println("adas");
             Group group = service.findGroupById(groupID).get();
-            return ResponseEntity.ok(group);
+            System.out.println("adas");
+            if(service.isUserInGroup(group.getId(),authService.getAuthenticatedUserId())){
+                return ResponseEntity.ok(group);
+            }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to view this group");
+
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }

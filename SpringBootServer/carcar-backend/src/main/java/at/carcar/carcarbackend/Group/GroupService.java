@@ -146,8 +146,17 @@ public class GroupService {
     public boolean isUserInGroup(Long groupID, Long userID) {
         Group group = groupRepository.findGroupById(groupID).orElseThrow(() ->
                 new IllegalStateException("Group with ID: " + groupID + " does not exist"));
+        for (User u : group.getUsers()) {
+            if (u.getId() == userID) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-        return group.getUsers().stream().anyMatch(user -> user.getId() == userID);
+    public Optional<Group> findGroupByCarId(long carId) {
+        Long groupId = groupRepository.findGroupByCarId(carId).orElseThrow(() -> new IllegalStateException("Group not found for carId: " + carId));
+        return groupRepository.findGroupById(groupId);
     }
 
 }

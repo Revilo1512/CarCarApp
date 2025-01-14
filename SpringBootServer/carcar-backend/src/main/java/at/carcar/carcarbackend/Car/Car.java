@@ -22,12 +22,15 @@ public class Car {
     private String brand;
     private String model;
     private boolean availabilityStatus;
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
-    private List<Report> reports = new ArrayList<>();
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
-    private List<Trip> trips = new ArrayList<>();
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
 
 
     public Car(String carName, String brand, String model, boolean availabilityStatus) {
@@ -41,9 +44,9 @@ public class Car {
 
     }
 
-    public List<Reservation> getReservations() {
+    /*public List<Reservation> getReservations() {
         return reservations;
-    }
+    }*/
 
     public String getBrand() {
         return brand;
@@ -97,10 +100,11 @@ public class Car {
         return id;
     }
 
-    public void addTrip(Trip trip) {
-        this.trips.add(trip);
+    /*public void addReservation(Reservation res) {
+        this.reservations.add(res);
     }
-    public void addReport(Report rep) {
-        this.reports.add(rep);
-    }
+
+    public void removeReservation(Reservation res) {
+        this.reservations.remove(res);
+    }*/
 }

@@ -42,6 +42,10 @@ public class Group {
         this.admin = admin;
         this.users = users;
         this.cars = cars;
+
+        if(users.stream().noneMatch(user -> user.getId() == admin.getId())){
+            users.add(admin);
+        }
     }
 
     public String getName() {
