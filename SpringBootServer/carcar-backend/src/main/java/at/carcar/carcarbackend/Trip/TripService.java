@@ -19,16 +19,12 @@ import java.util.Optional;
 public class TripService {
     private final TripRepository tripRepository;
     private final UserService userService;
-    private final ReservationService reservationService;
-    private final AuthorizationService authserv;
     private final CarService carService;
     private final GroupService groupService;
 
-    public TripService(TripRepository tripRepository, UserService userService, ReservationService reservationService, AuthorizationService authserv, CarService carService, GroupService groupService) {
+    public TripService(TripRepository tripRepository, UserService userService, CarService carService, GroupService groupService) {
         this.tripRepository = tripRepository;
         this.userService = userService;
-        this.reservationService = reservationService;
-        this.authserv = authserv;
         this.carService = carService;
         this.groupService = groupService;
     }

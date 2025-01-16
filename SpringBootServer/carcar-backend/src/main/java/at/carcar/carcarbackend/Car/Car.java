@@ -1,14 +1,8 @@
 package at.carcar.carcarbackend.Car;
 
 import at.carcar.carcarbackend.Report.Report;
-import at.carcar.carcarbackend.Reservation.Reservation;
-import at.carcar.carcarbackend.Trip.Trip;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "cars")
 
