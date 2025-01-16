@@ -19,9 +19,11 @@ import androidx.compose.ui.unit.dp
 import com.example.carcarapplication.TestValues.getGroups
 import com.example.carcarapplication.TestValues.getUser
 import com.example.carcarapplication.data_classes.Group
+import com.example.carcarapplication.data_classes.User
 
 @Composable
 fun DrawerContent(
+    user: User,
     groups: List<Group>,
     onNavigateToHome: () -> Unit,
     onNavigateToGroup: (String) -> Unit,
@@ -35,8 +37,6 @@ fun DrawerContent(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         //Top Section
-
-        val user = getUser() //This is an ugly solution probable even stupid; Should be removed with state or ViewModel
 
         Column{
             Text(
@@ -139,7 +139,8 @@ fun PreviewDrawerContent() {
             onNavigateToGroup = { /* Do nothing */ },
             onNavigateToUserSettings = { /* Do nothing */ },
             onNavigateLogOut = { /* Do nothing */ },
-            groups = getGroups()
+            groups = getGroups(),
+            user = getUser()
         )
     }
 }

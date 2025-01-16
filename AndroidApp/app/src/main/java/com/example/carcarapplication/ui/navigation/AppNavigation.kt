@@ -9,29 +9,42 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.carcarapplication.ui.screens.GroupScreen
-import com.example.carcarapplication.ui.screens.HomeScreen
-import com.example.carcarapplication.ui.components.DrawerContent
-import kotlinx.coroutines.launch
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.carcarapplication.LoginActivity
 import com.example.carcarapplication.R
-import com.example.carcarapplication.TestValues
-import com.example.carcarapplication.TestValues.getUser
 import com.example.carcarapplication.api_helpers.RetrofitClient
 import com.example.carcarapplication.data_classes.Group
+import com.example.carcarapplication.ui.components.DrawerContent
+import com.example.carcarapplication.ui.screens.DriveInfoScreen
+import com.example.carcarapplication.ui.screens.GroupScreen
+import com.example.carcarapplication.ui.screens.HomeScreen
+import com.example.carcarapplication.ui.screens.PreDriveScreen
 import com.example.carcarapplication.ui.screens.UserSettingsScreen
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +53,7 @@ fun AppNavigation(navController: NavHostController) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     var groups by remember { mutableStateOf<List<Group>>(emptyList()) } // State for groups
-
+    
     // Fetch groups asynchronously
     LaunchedEffect(Unit) {
         scope.launch {
@@ -86,7 +99,8 @@ fun AppNavigation(navController: NavHostController) {
                             val intent = Intent(context, LoginActivity::class.java).apply {}
                             context.startActivity(intent)
                         },
-                        groups = groups // Pass the fetched groups
+                        groups = groups, // Pass the fetched groups
+                        user = RetrofitClient.getUser()
                     )
                 }
             }
@@ -120,7 +134,10 @@ fun AppNavigation(navController: NavHostController) {
                     modifier = Modifier.padding(padding)
                 ) {
                     composable("home") {
-                        HomeScreen()
+                        HomeScreen(
+                            onNavigateToPreDrive = {navController.navigate("preDrive")},
+                            onNavigateToDriveInfo = { navController.navigate("driveInfo") }
+                        )
                     }
                     composable("group/{groupName}") { backStackEntry ->
                         val groupName = backStackEntry.arguments?.getString("groupName") ?: "Unknown Group"
@@ -128,6 +145,16 @@ fun AppNavigation(navController: NavHostController) {
                     }
                     composable("user settings"){
                         UserSettingsScreen()
+                    }
+                    composable("preDrive") {
+                        PreDriveScreen(
+                            onNavigateToHome = {navController.navigate("home")}
+                        )
+                    }
+                    composable("driveInfo") {
+                        DriveInfoScreen(
+                            onNavigateToHome = {navController.navigate("home")}
+                        )
                     }
                 }
             }

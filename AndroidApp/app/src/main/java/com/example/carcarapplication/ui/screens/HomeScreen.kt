@@ -1,7 +1,9 @@
 package com.example.carcarapplication.ui.screens
 
+import DriveState
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,16 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +41,10 @@ import retrofit2.Response
 import java.time.LocalTime
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onNavigateToPreDrive: () -> Unit,
+    onNavigateToDriveInfo: () -> Unit
+) {
     val user = RetrofitClient.getUser()
     val greeting = getGreeting()
     //val trips = RetrofitClient.apiService.getTrips()
@@ -52,6 +53,10 @@ fun HomeScreen() {
     // State to manage the trips list and errors
     val tripsState = remember { mutableStateOf<List<Trip>?>(null) }
     val errorState = remember { mutableStateOf(false) }
+
+    //Trip Feature
+    val isDriving = DriveState.isDriving.value
+    val elapsedTime = remember { mutableStateOf("00:00") }
 
     // Make the API call
     LaunchedEffect(Unit) {
@@ -70,6 +75,16 @@ fun HomeScreen() {
                 Log.d("error api", t.toString())
             }
         })
+    }
+
+    //Timer
+    LaunchedEffect(isDriving) {
+        while (isDriving) {
+            val currentTime = System.currentTimeMillis()
+            val duration = (currentTime - DriveState.startTime.longValue) / 1000 // seconds
+            elapsedTime.value = String.format("%02d:%02d", duration / 60, duration % 60)
+            kotlinx.coroutines.delay(1000L) // Update every second
+        }
     }
 
     // UI layout
@@ -167,14 +182,36 @@ fun HomeScreen() {
             }
         }
 
-        FAB(
-            onClick = {},
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(8.dp)
-        )
+        if (isDriving) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .padding(16.dp)
+                    .clickable { onNavigateToDriveInfo() }
+            ) {
+                Text(
+                    text = "Active drive - Elapsed Time: ${elapsedTime.value}",
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        } else {
+            FAB(
+                onClick = {
+                    onNavigateToPreDrive()
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(8.dp)
+            )
+        }
     }
 }
+
 
 //If we need that function more often we should move it to a "TimeFunctions.kt" file in the Utils folder
 fun getGreeting(): String {
@@ -189,17 +226,17 @@ fun getGreeting(): String {
 
 @Composable
 fun FAB(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    LargeFloatingActionButton(
-        onClick = {},
+    FloatingActionButton(
+        onClick = onClick,
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         contentColor = MaterialTheme.colorScheme.secondary,
         shape = CircleShape,
         modifier = modifier
     ) {
-        Icon(
-            imageVector = Icons.Filled.Add,
-            "Small floating action button.",
-            modifier = Modifier.size(64.dp)
+        Text(
+            text = "Start Trip",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(10.dp)
         )
     }
 }
