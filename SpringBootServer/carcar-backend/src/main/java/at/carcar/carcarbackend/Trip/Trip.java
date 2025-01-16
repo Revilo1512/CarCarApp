@@ -37,8 +37,7 @@ public class Trip {
         this.car = car;
     }
 
-    public Trip(int tripID, Date startTime, Car car, User user) {
-        this.id = tripID;
+    public Trip(Date startTime, Car car, User user) {
         this.startTime = startTime;
         this.car = car;
         this.user = user;

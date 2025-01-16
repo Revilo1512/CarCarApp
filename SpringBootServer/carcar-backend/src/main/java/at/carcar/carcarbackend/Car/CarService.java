@@ -36,13 +36,4 @@ public class CarService {
         carRepository.deleteById(carID);
     }
 
-    public boolean isUserInSameGroupAsCar(Long userId, Long carId) {
-        // Find the group that contains the car
-        Group group = groupService.findGroupByCarId(carId)
-                .orElseThrow(() -> new IllegalStateException("Group containing car with ID: " + carId + " not found!"));
-
-        // Check if the user is in the group
-        return groupService.isUserInGroup(group.getId(), userId);
-    }
-
 }

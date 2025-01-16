@@ -8,8 +8,10 @@ import at.carcar.carcarbackend.security.AuthorizationService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -30,13 +32,16 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation createReservation(Long carID, Date startDate, Date endDate) {
+    public Reservation createReservation(Long carID, String startDateParam, String endDateParam) {
 
         Car car = carService.findCarById(carID).orElseThrow(() -> new IllegalStateException(
                 "Car with: " + carID + " does not exist!"
         ));
 
-        if (isCarAvailable(car, startDate, endDate)) throw  new IllegalStateException("Car is not available in that time");
+        Date startDate = StringToDate(startDateParam);
+        Date endDate = StringToDate(endDateParam);
+
+        if (!isCarAvailable(car, startDate, endDate)) throw  new IllegalStateException("Car is not available in that time");
 
 
         User user = userService.findUserById(authService.getAuthenticatedUserId()).orElseThrow(() -> new IllegalStateException(
@@ -49,6 +54,15 @@ public class ReservationService {
         reservationRepository.save(reservation);
         //car.addReservation(reservation);
         return reservation;
+    }
+
+    private Date StringToDate(String dater) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        try {
+            return formatter.parse(dater);
+        } catch (Exception e) {
+            throw new IllegalStateException("Date format wrong. Expected format: dd.MM.yyyy HH:mm:ss");
+        }
     }
 
     public boolean isCarAvailable(Car car, Date startDate, Date endDate) {
@@ -75,7 +89,7 @@ public class ReservationService {
 
 
     @Transactional
-    public Reservation modifyReservation(Long reservationID, Date newStartDate, Date newEndDate) {
+    public Reservation modifyReservation(Long reservationID, String startDateParam, String endDateParam) {
         Reservation reservation = reservationRepository.findById(reservationID).orElseThrow(() ->
                 new IllegalStateException("Reservation with ID: " + reservationID + " does not exist!"));
 
@@ -86,25 +100,28 @@ public class ReservationService {
             throw new IllegalStateException("You are not authorized to modify this reservation!");
         }
 
+        Date startDate = StringToDate(startDateParam);
+        Date endDate = StringToDate(endDateParam);
+
         Car car = reservation.getCar();
 
         // Check if the car is available for the new time
         List<Reservation> carReservations = reservationRepository.getReservationsByCar(car);
         carReservations.remove(reservation); // Exclude the current reservation
-        if (!calcDates(newStartDate, newEndDate, carReservations)) {
+        if (!calcDates(startDate, endDate, carReservations)) {
             throw new IllegalStateException("The car is not available at the specified time.");
         }
 
         // Check if the user is available for the new time
         List<Reservation> userReservations = reservationRepository.getReservationsByUser(authenticatedUser);
         userReservations.remove(reservation); // Exclude the current reservation
-        if (!calcDates(newStartDate, newEndDate, userReservations)) {
+        if (!calcDates(startDate, endDate, userReservations)) {
             throw new IllegalStateException("You are not available at the specified time.");
         }
 
         // Update the reservation
-        reservation.setReservationStart(newStartDate);
-        reservation.setReservationEnd(newEndDate);
+        reservation.setReservationStart(startDate);
+        reservation.setReservationEnd(endDate);
         reservationRepository.save(reservation);
 
         return reservation;
@@ -118,7 +135,7 @@ public class ReservationService {
         User authenticatedUser = userService.findUserById(authService.getAuthenticatedUserId())
                 .orElseThrow(() -> new IllegalStateException("Authenticated user not found!"));
 
-        if (!reservation.getUser().equals(authenticatedUser)) {
+        if (reservation.getUser().getId() != (authenticatedUser).getId()) {
             throw new IllegalStateException("You are not authorized to cancel this reservation!");
         }
 
@@ -128,5 +145,9 @@ public class ReservationService {
 
     public List<Reservation> getReservationsByCar(Car cer) {
         return reservationRepository.getReservationsByCar(cer);
+    }
+
+    public Optional<Reservation> findById(Long reservationId) {
+        return reservationRepository.findById(reservationId);
     }
 }

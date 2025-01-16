@@ -2,10 +2,13 @@ package at.carcar.carcarbackend.Car;
 import at.carcar.carcarbackend.Group.Group;
 import at.carcar.carcarbackend.Group.GroupService;
 import at.carcar.carcarbackend.Reservation.ReservationService;
+import at.carcar.carcarbackend.Trip.TripRepository;
+import at.carcar.carcarbackend.Trip.TripService;
 import at.carcar.carcarbackend.security.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,15 +23,17 @@ public class CarController {
     private final GroupService groupService;
     private final AuthorizationService authService;
     private final ReservationService resService;
-    private final CarService carService;
+    private final TripRepository tripRepository;
+    private final TripService tripService;
 
     @Autowired
-    public CarController(CarService service, GroupService gs, AuthorizationService authService, ReservationService resService, CarService carService) {
+    public CarController(CarService service, GroupService gs, AuthorizationService authService, ReservationService resService, CarService carService, TripRepository tripRepository, TripService tripService) {
         this.service = service;
         this.groupService = gs;
         this.authService = authService;
         this.resService = resService;
-        this.carService = carService;
+        this.tripRepository = tripRepository;
+        this.tripService = tripService;
     }
 
     @GetMapping
@@ -41,14 +46,15 @@ public class CarController {
     }
 
     @GetMapping("/{carID}")
+    @NonNull
     public ResponseEntity<?> getCarById(@PathVariable Long carID) {
         try {
             Car car = service.findCarById(carID)
                     .orElseThrow(() -> new IllegalStateException("Car with ID: " + carID + " not found!"));
 
-            if (!service.isUserInSameGroupAsCar(authService.getAuthenticatedUserId(), carID)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to view this car.");
-            }
+            ResponseEntity<String> response = getStringResponseEntity(carID);
+            if (response != null) return response;
+
 
             return ResponseEntity.ok(car);
         } catch (IllegalStateException e) {
@@ -61,6 +67,7 @@ public class CarController {
 
     // Create Car
     @PostMapping("/createCar")
+    @NonNull
     public ResponseEntity<?> createCar(@RequestBody Car car) {
 
         Car newCar;
@@ -77,28 +84,50 @@ public class CarController {
     }
 
     @GetMapping("/getReservations")
+    @NonNull
     public ResponseEntity<?> getCarReservationsById(@RequestParam Long carId) {
         try{
             Optional<Car> car = service.findCarById(carId);
             if (car.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CarID invalid");
             }
-            Optional<Group> groupOptional = groupService.findGroupByCarId(carId);
-            if (groupOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No group found for this car");
-            }
-
-            Group group = groupOptional.get();
+            ResponseEntity<String> response = getStringResponseEntity(carId);
+            if (response != null) return response;
             Car cer = car.get();
-            if (!carService.isUserInSameGroupAsCar(authService.getAuthenticatedUserId(), carId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to view this car's reservations");
-            }
-
 
             return ResponseEntity.ok(resService.getReservationsByCar(cer));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/getStatistics")
+    @NonNull
+    public ResponseEntity<?> getCarStatistics(@RequestParam Long carId) {
+        try{
+            Optional<Car> car = service.findCarById(carId);
+            if (car.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CarID invalid");
+            }
+            String s = tripService.getCarStatistics(carId);
+
+            return ResponseEntity.ok(s);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    private ResponseEntity<String> getStringResponseEntity(Long carId) {
+        Optional<Group> groupOptional = groupService.findGroupByCarId(carId);
+        if (groupOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Group containing car with ID: " + carId + " not found!");
+        }
+
+        Group group = groupOptional.get();
+        if (!groupService.isUserInGroup(group.getId(), authService.getAuthenticatedUserId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to view this car.");
+        }
+        return null;
     }
 
     // Delete car

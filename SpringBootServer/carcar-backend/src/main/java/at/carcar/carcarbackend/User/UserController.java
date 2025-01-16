@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,6 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/{userID}")
+    @NonNull
     public ResponseEntity<User> getUsersById(@PathVariable long userID){
         Optional<User> user = service.findUserById(userID);
         if(user.isEmpty()){
@@ -45,6 +47,7 @@ public class UserController {
         return ResponseEntity.ok(user.get());
     }
     @GetMapping("/login")
+    @NonNull
     public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
         try {
             User user = service.validateUser(email, password); // Ensure password is hashed and validated securely
@@ -65,6 +68,7 @@ public class UserController {
     }
     // Register
     @PostMapping("/register")
+    @NonNull
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
             User newUser = service.registerUser(user);

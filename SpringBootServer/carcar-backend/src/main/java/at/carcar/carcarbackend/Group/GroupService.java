@@ -128,7 +128,7 @@ public class GroupService {
         return userInGroups;
     }
 
-    public Group changeAdmin(Long groupID, Long userID) {
+    public void changeAdmin(Long groupID, Long userID) {
         // Fetch group and user
         Group group = groupRepository.findGroupById(groupID).orElseThrow(() ->
                 new IllegalStateException("Group with ID: " + groupID + " does not exist"));
@@ -139,7 +139,6 @@ public class GroupService {
         group.setAdmin(user);
         groupRepository.save(group);
 
-        return group;
     }
 
 

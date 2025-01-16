@@ -1,14 +1,13 @@
 package at.carcar.carcarbackend.Group;
-import at.carcar.carcarbackend.User.User;
 import at.carcar.carcarbackend.security.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping(path = "/groups")
@@ -33,6 +32,7 @@ public class GroupController {
     }
 
     @GetMapping("/{groupID}")
+    @NonNull
     public ResponseEntity<?> getGroupById(@PathVariable int groupID) {
         try{
             System.out.println("adas");
@@ -50,6 +50,7 @@ public class GroupController {
 
     // Create Group
     @PostMapping("/createGroup")
+    @NonNull
     public ResponseEntity<?> addGroup(@RequestParam String groupName) {
 
         Group newGroup;
@@ -66,6 +67,7 @@ public class GroupController {
     }
 
     @DeleteMapping("/deleteGroup")
+    @NonNull
     public ResponseEntity<?> deleteGroup(@RequestParam Long groupID) {
         try {
 
@@ -84,6 +86,7 @@ public class GroupController {
     }
 
     @PutMapping("/addCar")
+    @NonNull
     public ResponseEntity<?> addCar(@RequestParam Long groupID, @RequestParam Long carID) {
         try {
             Group group = service.findGroupById(groupID).get();
@@ -101,6 +104,7 @@ public class GroupController {
 
 
     // Remove Car from Group
+    @NonNull
     @PutMapping("/removeCar")
     public ResponseEntity<?> removeCar(@RequestParam Long groupID, @RequestParam Long carID) {
         try {
@@ -119,6 +123,7 @@ public class GroupController {
 
     // Add User to Group
     @PutMapping("/addUser")
+    @NonNull
     public ResponseEntity<?> addUser(@RequestParam Long groupID, @RequestParam Long userID) {
         try {
             Group group = service.findGroupById(groupID).get();
@@ -137,6 +142,7 @@ public class GroupController {
 
     // Remove User from Group
     @PutMapping("/removeUser")
+    @NonNull
     public ResponseEntity<?> removeUser(@RequestParam Long groupID, @RequestParam Long userID) {
         try {
             Group group = service.findGroupById(groupID).get();
@@ -152,6 +158,7 @@ public class GroupController {
     }
 
     @PutMapping("/leaveGroup")
+    @NonNull
     public ResponseEntity<?> leaveGroup(@RequestParam Long groupID) {
         try {
             Long authenticatedUserId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -170,6 +177,7 @@ public class GroupController {
     }
 
     @PutMapping("/changeAdmin")
+    @NonNull
     public ResponseEntity<?> changeGroupAdmin(@RequestParam Long groupID, @RequestParam Long userID) {
         try {
             Group group = service.findGroupById(groupID).get();
@@ -190,6 +198,7 @@ public class GroupController {
     }
     // Get All Groups of User
     @GetMapping("/groupsOfUser")
+    @NonNull
     public ResponseEntity<?> getAllGroupsOfUser(@RequestParam Long userID) {
         try {
             if (!authService.isSameUser(userID)) {
