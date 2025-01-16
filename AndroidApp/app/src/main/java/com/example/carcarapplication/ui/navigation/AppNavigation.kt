@@ -1,6 +1,5 @@
 package com.example.carcarapplication.ui.navigation
 
-import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,8 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -21,28 +19,39 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.carcarapplication.data_classes.User
 import com.example.carcarapplication.ui.screens.GroupScreen
 import com.example.carcarapplication.ui.screens.HomeScreen
 import com.example.carcarapplication.ui.components.DrawerContent
 import kotlinx.coroutines.launch
 import androidx.compose.ui.unit.dp
-import androidx.navigation.ActivityNavigator
 import androidx.navigation.compose.rememberNavController
 import com.example.carcarapplication.LoginActivity
-import com.example.carcarapplication.MainActivity
 import com.example.carcarapplication.R
 import com.example.carcarapplication.TestValues
 import com.example.carcarapplication.TestValues.getUser
+import com.example.carcarapplication.api_helpers.RetrofitClient
+import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.ui.screens.UserSettingsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavigation(navController: NavHostController, user: User) {
+fun AppNavigation(navController: NavHostController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val groups = TestValues.getGroups()
     val context = LocalContext.current
+    var groups by remember { mutableStateOf<List<Group>>(emptyList()) } // State for groups
+
+    // Fetch groups asynchronously
+    LaunchedEffect(Unit) {
+        scope.launch {
+            try {
+                val fetchedGroups = RetrofitClient.apiService.getGroupsOfUser(RetrofitClient.getUser().userID)
+                groups = fetchedGroups // Update groups state
+            } catch (e: Exception) {
+                e.printStackTrace() // Handle error if fetching groups fails
+            }
+        }
+    }
 
     Box {
         ModalNavigationDrawer(
@@ -69,12 +78,15 @@ fun AppNavigation(navController: NavHostController, user: User) {
                         },
                         onNavigateLogOut = {
                             scope.launch { drawerState.close() }
+
+                            // Clear the cookies using the CookieInterceptor instance
+                            RetrofitClient.cookieInterceptor.clearCookies()  // Make sure you have access to the interceptor
+
+                            // Redirect the user to the login activity
                             val intent = Intent(context, LoginActivity::class.java).apply {}
                             context.startActivity(intent)
-                            //navController.navigate("login")
-                            //scope.launch { drawerState.close() }
                         },
-                        groups = groups
+                        groups = groups // Pass the fetched groups
                     )
                 }
             }
@@ -108,11 +120,11 @@ fun AppNavigation(navController: NavHostController, user: User) {
                     modifier = Modifier.padding(padding)
                 ) {
                     composable("home") {
-                        HomeScreen(user = user)
+                        HomeScreen()
                     }
                     composable("group/{groupName}") { backStackEntry ->
                         val groupName = backStackEntry.arguments?.getString("groupName") ?: "Unknown Group"
-                        GroupScreen(groupName = groupName, currentUser = getUser())
+                        GroupScreen(groupName = groupName)
                     }
                     composable("user settings"){
                         UserSettingsScreen()
@@ -129,5 +141,5 @@ fun AppNavigationPreview() {
     // Mock NavHostController for preview purposes
     val navController = rememberNavController()
 
-    AppNavigation(navController = navController, user = getUser())
+    AppNavigation(navController = navController)
 }

@@ -47,7 +47,7 @@ object TestValues {
 
     private val testGroups = listOf(
         Group(
-            id = 1,
+            groupID = 1,
             name = "Hawk Tours",
             admin = getMembers()[0],
             users = getMembers(),
@@ -55,7 +55,7 @@ object TestValues {
             //pendingRequests = emptyList()
         ),
         Group(
-            id = 2,
+            groupID = 2,
             name = "Familie Schnürschuh",
             admin = getUser(),
             users = listOf(getUser()),
@@ -65,44 +65,44 @@ object TestValues {
     )
 
     private val testCar = Car(
-        id = 1,
+        carID = 1,
         carName = "McQueen",
         brand = "Fast",
         model = "Quickest",
         availabilityStatus = true,
-        reservations = emptyList()
+        //reservations = emptyList()
         //reports = emptyList(),
         //trips = getTrips()
     )
 
     private val testCars = listOf(
         Car(
-            id = 1,
+            carID = 1,
             carName = "McQueen",
             brand = "Fast",
             model = "Quickest",
             availabilityStatus = true,
-            reservations = emptyList()
+            //reservations = emptyList()
             //reports = emptyList(),
             //trips = getTrips()
         ),
         Car(
-            id = 2,
+            carID = 2,
             carName = "Reidiga Ford",
             brand = "Ford",
             model = "Galaxy",
             availabilityStatus = false,
-            reservations = emptyList()
+            //reservations = emptyList()
             //reports = emptyList(),
             //trips = getTrips()
         ),
         Car(
-            id = 3,
+            carID = 3,
             carName = "Bathmorgihni",
             brand = "Lambo",
             model = "Showerhead",
             availabilityStatus = true,
-            reservations = emptyList()
+            //reservations = emptyList()
             //reports = emptyList(),
             //trips = getTrips()
         )
@@ -148,8 +148,6 @@ object TestValues {
         )
     )
 
-    //These testvalues presumebly will end up in the whole "TestCar" data
-
 
     fun getUser(): User {
         return testUser
@@ -170,10 +168,6 @@ object TestValues {
 
     fun getCar(): Car {
         return testCar
-    }
-
-    fun getCars(): List<Car> {
-        return testCars
     }
     
     fun getTrips(): List<Trip> {

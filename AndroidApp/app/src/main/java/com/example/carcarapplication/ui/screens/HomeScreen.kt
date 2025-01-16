@@ -1,5 +1,7 @@
 package com.example.carcarapplication.ui.screens
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,24 +22,57 @@ import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.carcarapplication.TestValues.getFavoriteCars
-import com.example.carcarapplication.TestValues.getTrips
-import com.example.carcarapplication.data_classes.User
+import com.example.carcarapplication.api_helpers.RetrofitClient
+import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.ui.components.CarCarouselItem
 import com.example.carcarapplication.ui.components.TripItem
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.LocalTime
 
 @Composable
-fun HomeScreen(user: User) {
+fun HomeScreen() {
+    val user = RetrofitClient.getUser()
     val greeting = getGreeting()
-    val trips = getTrips()
+    //val trips = RetrofitClient.apiService.getTrips()
     val favoriteCars = getFavoriteCars()
 
+    // State to manage the trips list and errors
+    val tripsState = remember { mutableStateOf<List<Trip>?>(null) }
+    val errorState = remember { mutableStateOf(false) }
+
+    // Make the API call
+    LaunchedEffect(Unit) {
+        val call: Call<List<Trip>> = RetrofitClient.apiService.getTrips()
+        call.enqueue(object : Callback<List<Trip>> {
+            override fun onResponse(call: Call<List<Trip>>, response: Response<List<Trip>>) {
+                if (response.isSuccessful) {
+                    tripsState.value = response.body() // Update trips state
+                } else {
+                    tripsState.value = emptyList() // Handle empty response gracefully
+                }
+            }
+
+            override fun onFailure(call: Call<List<Trip>>, t: Throwable) {
+                errorState.value = true // Set error state on failure
+                Log.d("error api", t.toString())
+            }
+        })
+    }
+
+    // UI layout
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -57,15 +92,51 @@ fun HomeScreen(user: User) {
             Text(
                 text = "Your upcoming trips",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth()
             )
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(max = 500.dp)
             ) {
-                items(trips.take(4)) { trip ->
-                    TripItem(trip = trip)
+                when {
+                    errorState.value -> {
+                        item {
+                            Text(
+                                text = "An error occurred. Please try again.",
+                                style = MaterialTheme.typography.titleMedium,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .padding(bottom = 8.dp)
+                                    .background(Color.LightGray)
+                            )
+                        }
+                    }
+
+                    tripsState.value.isNullOrEmpty() -> {
+                        item {
+                            Text(
+                                text = "This looks awfully empty...",
+                                style = MaterialTheme.typography.titleMedium,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .padding(bottom = 8.dp)
+                                    .background(Color.LightGray)
+                                    .fillParentMaxWidth()
+                            )
+                        }
+                    }
+
+                    else -> {
+                        items(tripsState.value!!.take(4)) { trip ->
+                            TripItem(trip = trip)
+                        }
+                    }
                 }
             }
 
@@ -75,11 +146,15 @@ fun HomeScreen(user: User) {
                 color = Color.Black
             )
 
-            //FAVE SECTION
+            // FAVOURITES SECTION
             Text(
                 text = "Favourites",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth()
             )
 
             LazyRow(

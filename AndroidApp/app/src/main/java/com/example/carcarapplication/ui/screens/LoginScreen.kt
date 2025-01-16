@@ -85,9 +85,8 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
                         try {
                             val user = RetrofitClient.apiService.getUser(email, password)
                             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(context, MainActivity::class.java).apply {
-                                putExtra("user", user)
-                            }
+                            RetrofitClient.setUser(user)
+                            val intent = Intent(context, MainActivity::class.java)
                             context.startActivity(intent)
                         } catch (e: HttpException) {
                             Log.e("LoginScreen", "Login failed: ${e.message()}")

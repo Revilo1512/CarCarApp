@@ -5,7 +5,7 @@ import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class User(
-    val userID : Long?,
+    val userID : Long,
     val name : String,
     val email : String,
     val password : String,

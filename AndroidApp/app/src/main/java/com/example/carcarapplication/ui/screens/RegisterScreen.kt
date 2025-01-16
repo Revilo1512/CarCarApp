@@ -90,20 +90,28 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
                 onClick = {
                     loading = true
                     (context as? ComponentActivity)?.lifecycleScope?.launch {
-                        val request = User(null, username, email, password)
+                        val request = User(0, username, email, password)
                         try {
+                            // Register the user
                             val user = RetrofitClient.apiService.postUser(request)
                             Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(context, MainActivity::class.java).apply {
-                                putExtra("user", user)
-                            }
+
+                            // Now login the user by calling getUser API
+                            val loggedInUser = RetrofitClient.apiService.getUser(email, password)
+                            Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+
+                            // Save user session
+                            RetrofitClient.setUser(loggedInUser)
+
+                            // Navigate to the MainActivity
+                            val intent = Intent(context, MainActivity::class.java)
                             context.startActivity(intent)
                         } catch (e: HttpException) {
-                            Log.e("DataHelper", "Register failed: ${e.message()}")
+                            Log.e("RegisterScreen", "Registration failed: ${e.message()}")
                             Toast.makeText(context, "Network error", Toast.LENGTH_SHORT).show()
                         } catch (e: Exception) {
-                            Log.e("DataHelper", "An error occurred: ${e.message}")
-                            Toast.makeText(context, "Register failed", Toast.LENGTH_SHORT).show()
+                            Log.e("RegisterScreen", "An error occurred: ${e.message}")
+                            Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show()
                         } finally {
                             loading = false
                         }

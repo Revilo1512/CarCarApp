@@ -55,22 +55,18 @@ fun UserItem(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Card (
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 4.dp)
-            .clickable(
-                onClick = { expanded = true }
-            ),
+            .clickable(onClick = { expanded = true }),
         shape = MaterialTheme.shapes.medium
     ) {
-        Row (
+        Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
+            Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = user.name,
@@ -89,27 +85,26 @@ fun UserItem(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            if (!adminView) {
+
+            if (adminView && !isAdmin) { // Show options if the current user is an admin and the user is not an admin
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
                 ) {
-                    if (!isAdmin){
-                        DropdownMenuItem(
-                            text = { Text("Promote to Admin") },
-                            onClick = {
-                                expanded = false
-                                promoteToAdmin(group, user)
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Remove User") },
-                            onClick = {
-                                expanded = false
-                                onRemoveUser(user)
-                            }
-                        )
-                    }
+                    DropdownMenuItem(
+                        text = { Text("Promote to Admin") },
+                        onClick = {
+                            expanded = false
+                            onPromoteToAdmin(user)
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Remove User") },
+                        onClick = {
+                            expanded = false
+                            onRemoveUser(user)
+                        }
+                    )
                 }
             }
         }
@@ -128,7 +123,8 @@ fun CarItem(
             .padding(horizontal = 4.dp)
             .border(
                 width = 2.dp,
-                color = if (isAvailable(currentTime,car.reservations)) Color.Black else Color.Red,
+                //color = if (isAvailable(currentTime,car.reservations)) Color.Black else Color.Red,
+                color = Color.Black,
                 shape = MaterialTheme.shapes.medium
             ),
         shape = MaterialTheme.shapes.medium

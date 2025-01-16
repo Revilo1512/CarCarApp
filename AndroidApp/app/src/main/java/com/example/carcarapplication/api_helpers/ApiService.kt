@@ -1,12 +1,16 @@
 package com.example.carcarapplication.api_helpers
 
+import com.example.carcarapplication.data_classes.Car
 import com.example.carcarapplication.data_classes.Group
+import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.data_classes.User
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -21,6 +25,11 @@ interface ApiService {
         @Body user: User
     ): User
 
+    @GET("/{groupID}")
+    suspend fun getGroupById(
+        @Path("groupID") groupID: Long
+    ): Group
+
     @POST("groups/createGroup")
     suspend fun createGroup(
         @Query("adminID") adminID: Long,
@@ -32,6 +41,9 @@ interface ApiService {
     suspend fun deleteGroup(
         @Query("groupID") groupID: Long
     ): String // Response will be a message (String)
+
+    @GET("cars")
+    fun getCars(): Call<List<Car>>
 
     // Add Car to Group
     @PUT("groups/addCar")
@@ -65,4 +77,13 @@ interface ApiService {
     suspend fun getGroupsOfUser(
         @Query("userID") userID: Long
     ): List<Group>
+
+    @PUT("groups/changeAdmin")
+    suspend fun changeAdmin(
+        @Query("groupID") groupID: Long,
+        @Query("userID") userID: Long
+    ) : String
+
+    @GET("trips")
+    fun getTrips(): Call<List<Trip>>
 }
