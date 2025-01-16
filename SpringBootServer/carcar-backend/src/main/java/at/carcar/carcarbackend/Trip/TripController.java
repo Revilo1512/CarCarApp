@@ -1,15 +1,11 @@
 package at.carcar.carcarbackend.Trip;
-import at.carcar.carcarbackend.Car.Car;
-import at.carcar.carcarbackend.Reservation.Reservation;
 import at.carcar.carcarbackend.security.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
 @RestController
 @RequestMapping(path = "/trips")
 public class TripController {

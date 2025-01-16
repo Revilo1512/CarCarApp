@@ -1,21 +1,13 @@
 package at.carcar.carcarbackend.Car;
-import at.carcar.carcarbackend.Group.Group;
-import at.carcar.carcarbackend.Group.GroupService;
-import at.carcar.carcarbackend.Reservation.Reservation;
-import at.carcar.carcarbackend.User.User;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 @Service
 public class CarService {
     private final CarRepository carRepository;
-    private final GroupService groupService;
 
-    public CarService(CarRepository carRepository, GroupService groupService) {
+    public CarService(CarRepository carRepository) {
         this.carRepository = carRepository;
-        this.groupService = groupService;
     }
 
     public Optional<Car> findCarById(long id) {

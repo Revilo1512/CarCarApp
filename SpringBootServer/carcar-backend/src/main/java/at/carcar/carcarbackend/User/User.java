@@ -1,12 +1,7 @@
 package at.carcar.carcarbackend.User;
-
-import at.carcar.carcarbackend.Group.Group;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
-
-import java.util.ArrayList;
-import java.util.List;
 @Entity
 @Table(name = "users")
 public class User {
@@ -55,18 +50,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public void leaveGroup(int groupID) {
-        // Implement functionality to leave a group
-    }
-
-    public void manageInvitation(int groupID) {
-        // Implement functionality to manage group invitations
-    }
-
-    public void sendJoinRequest(int groupID) {
-        // Implement functionality to send a join request to a group
     }
 
     public String getPassword() {

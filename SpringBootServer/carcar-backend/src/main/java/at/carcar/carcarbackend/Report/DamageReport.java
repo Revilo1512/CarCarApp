@@ -4,7 +4,6 @@ import at.carcar.carcarbackend.Trip.Trip;
 import at.carcar.carcarbackend.User.User;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
 import java.util.Date;
 import java.util.List;
