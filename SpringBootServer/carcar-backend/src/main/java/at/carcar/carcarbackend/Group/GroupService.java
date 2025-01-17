@@ -34,13 +34,17 @@ public class GroupService {
                 "User with ID: " + adminID + " does not exist!"));
 
         Group group;
-
-        if (groupName != null && !groupName.isEmpty()) {
-            group = new Group(groupName, user, List.of(), List.of());
-            groupRepository.save(group);
-        } else {
-            throw new IllegalStateException("Invalid Group Name!");
+        try{
+            if (groupName != null && !groupName.isEmpty()) {
+                group = new Group(groupName, user, List.of(), List.of());
+                groupRepository.save(group);
+            } else {
+                throw new IllegalStateException("Invalid Group Name!");
+            }
+        }catch (IllegalStateException e){
+             throw new IllegalStateException("Maier" +e.getMessage());
         }
+
         return group;
     }
 

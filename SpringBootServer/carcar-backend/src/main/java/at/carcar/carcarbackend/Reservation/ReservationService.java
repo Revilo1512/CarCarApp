@@ -150,4 +150,9 @@ public class ReservationService {
     public Optional<Reservation> findById(Long reservationId) {
         return reservationRepository.findById(reservationId);
     }
+
+    public List<Reservation> getReservationByUser(Long authenticatedUserId) {
+        User usr = userService.findUserById(authenticatedUserId).orElseThrow(() -> new IllegalStateException("User not found!"));
+        return reservationRepository.getReservationsByUser(usr);
+    }
 }

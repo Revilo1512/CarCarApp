@@ -36,7 +36,7 @@ public class GroupController {
     public ResponseEntity<?> getGroupById(@PathVariable int groupID) {
         try{
             System.out.println("adas");
-            Group group = service.findGroupById(groupID).get();
+            Group group = service.findGroupById(groupID).orElseThrow(() -> new IllegalStateException("Group not found."));
             System.out.println("adas");
             if(service.isUserInGroup(group.getId(),authService.getAuthenticatedUserId())){
                 return ResponseEntity.ok(group);
@@ -52,13 +52,21 @@ public class GroupController {
     @PostMapping("/createGroup")
     @NonNull
     public ResponseEntity<?> addGroup(@RequestParam String groupName) {
-
         Group newGroup;
+        System.out.println("adas");
         try {
+            System.out.println("adas");
+
             newGroup = service.createGroup(authService.getAuthenticatedUserId(), groupName);
+            System.out.println("adas");
+
             if (newGroup != null) {
+                System.out.println("adasasdsadsadasd");
+
                 return ResponseEntity.status(HttpStatus.CREATED).body(newGroup); // Return the created Group
             } else {
+                System.out.println("ahghozifrtzop");
+
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Group Creation failed.");
             }
         } catch (Exception e) {
@@ -71,7 +79,7 @@ public class GroupController {
     public ResponseEntity<?> deleteGroup(@RequestParam Long groupID) {
         try {
 
-            Group group = service.findGroupById(groupID).get();
+            Group group = service.findGroupById(groupID).orElseThrow(() -> new IllegalStateException("Group not found."));
 
             if (!authService.isAdminOfGroup(group)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this group");
@@ -89,7 +97,7 @@ public class GroupController {
     @NonNull
     public ResponseEntity<?> addCar(@RequestParam Long groupID, @RequestParam Long carID) {
         try {
-            Group group = service.findGroupById(groupID).get();
+            Group group = service.findGroupById(groupID).orElseThrow(() -> new IllegalStateException("Group not found."));
 
             if ((!authService.isAdminOfGroup(group))) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to add cars to this group");
@@ -108,7 +116,7 @@ public class GroupController {
     @PutMapping("/removeCar")
     public ResponseEntity<?> removeCar(@RequestParam Long groupID, @RequestParam Long carID) {
         try {
-            Group group = service.findGroupById(groupID).get();
+            Group group = service.findGroupById(groupID).orElseThrow(() -> new IllegalStateException("Group not found."));
 
             if ((!authService.isAdminOfGroup(group))) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to remove cars from this group");
@@ -126,7 +134,7 @@ public class GroupController {
     @NonNull
     public ResponseEntity<?> addUser(@RequestParam Long groupID, @RequestParam Long userID) {
         try {
-            Group group = service.findGroupById(groupID).get();
+            Group group = service.findGroupById(groupID).orElseThrow(() -> new IllegalStateException("Group not found."));
 
             if (!authService.isAdminOfGroup(group)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to add users to this group");
@@ -145,7 +153,7 @@ public class GroupController {
     @NonNull
     public ResponseEntity<?> removeUser(@RequestParam Long groupID, @RequestParam Long userID) {
         try {
-            Group group = service.findGroupById(groupID).get();
+            Group group = service.findGroupById(groupID).orElseThrow(() -> new IllegalStateException("Group not found."));
             if (!authService.isAdminOfGroup(group)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to remove users from this group");
             }
@@ -163,7 +171,7 @@ public class GroupController {
         try {
             Long authenticatedUserId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            Group group = service.findGroupById(groupID).get();
+            Group group = service.findGroupById(groupID).orElseThrow(() -> new IllegalStateException("Group not found."));
 
             if (authService.isAdminOfGroup(group)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Admin cannot leave the group. Please assign a new admin before leaving.");
@@ -180,9 +188,7 @@ public class GroupController {
     @NonNull
     public ResponseEntity<?> changeGroupAdmin(@RequestParam Long groupID, @RequestParam Long userID) {
         try {
-            Group group = service.findGroupById(groupID).get();
-            Long authenticatedUserId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+            Group group = service.findGroupById(groupID).orElseThrow(() -> new IllegalStateException("Group not found."));
             if (!authService.isAdminOfGroup(group)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to change admin of this group");
             }
@@ -216,6 +222,8 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
+
+
 }
 
 

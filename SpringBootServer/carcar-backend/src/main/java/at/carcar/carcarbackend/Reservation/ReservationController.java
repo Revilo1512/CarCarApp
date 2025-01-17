@@ -85,4 +85,18 @@ public class ReservationController {
         }
     }
 
+    @GetMapping("/getReservationForUser")
+    public ResponseEntity<?> getReservationForUser() {
+        try {
+            List<Reservation> reservations = service.getReservationByUser(authService.getAuthenticatedUserId());
+            if (reservations.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Reservations found!");
+            }
+            return ResponseEntity.ok(reservations);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+    }
+
 }
