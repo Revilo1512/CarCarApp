@@ -37,8 +37,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.carcarapplication.LoginActivity
 import com.example.carcarapplication.R
 import com.example.carcarapplication.api_helpers.RetrofitClient
+import com.example.carcarapplication.data_classes.Car
 import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.ui.components.DrawerContent
+import com.example.carcarapplication.ui.screens.CarCreationScreen
+import com.example.carcarapplication.ui.screens.CarViewScreen
 import com.example.carcarapplication.ui.screens.DriveInfoScreen
 import com.example.carcarapplication.ui.screens.GroupScreen
 import com.example.carcarapplication.ui.screens.HomeScreen
@@ -140,8 +143,11 @@ fun AppNavigation(navController: NavHostController) {
                         )
                     }
                     composable("group/{groupName}") { backStackEntry ->
-                        val groupName = backStackEntry.arguments?.getString("groupName") ?: "Unknown Group"
-                        GroupScreen(groupName = groupName)
+                        val groupName1 = backStackEntry.arguments?.getString("groupName") ?: "Unknown Group"
+                        GroupScreen(
+                            groupName = groupName1,
+                            onNavigateToCarCreation = {groupName -> navController.navigate("carCreation/$groupName")},
+                            onNavigateToCarView = {carID -> navController.navigate("carView/$carID") })
                     }
                     composable("user settings"){
                         UserSettingsScreen()
@@ -150,6 +156,15 @@ fun AppNavigation(navController: NavHostController) {
                         PreDriveScreen(
                             onNavigateToHome = {navController.navigate("home")}
                         )
+                    }
+                    composable("carCreation/{groupName}") { backStackEntry ->
+                        val groupName1 = backStackEntry.arguments?.getString("groupName") ?: "Unknown Group"
+                        CarCreationScreen(groupName = groupName1, onNavigateToGroup = {groupName -> navController.navigate("group/$groupName") }
+                        )
+                    }
+                    composable("carView/{carID}") { backStackEntry ->
+                        val carID1 = backStackEntry.arguments?.getString("carID") ?: "Unknown Car"
+                        CarViewScreen(carID1)
                     }
                     composable("driveInfo") {
                         DriveInfoScreen(

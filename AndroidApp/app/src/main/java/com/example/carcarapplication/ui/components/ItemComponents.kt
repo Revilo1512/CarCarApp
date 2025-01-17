@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -30,11 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.carcarapplication.TestValues
 import com.example.carcarapplication.data_classes.Car
 import com.example.carcarapplication.data_classes.Group
+import com.example.carcarapplication.data_classes.Reservation
 import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.data_classes.User
 import com.example.carcarapplication.ui.utils.isAvailable
@@ -112,15 +118,66 @@ fun UserItem(
 }
 
 @Composable
+fun ReservationCard(reservation: Reservation) {
+    val dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            // User information
+            Text(
+                text = "User Name: ${reservation.user.name}",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            Text(
+                text = "Email: ${reservation.user.email}",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Reservation information
+            Text(
+                text = "Reservation Start: ${reservation.reservationStart.format(dateTimeFormatter)}",
+                fontSize = 16.sp,
+                color = Color.Black
+            )
+            Text(
+                text = "Reservation End: ${reservation.reservationEnd.format(dateTimeFormatter)}",
+                fontSize = 16.sp,
+                color = Color.Black
+            )
+        }
+    }
+}
+
+@Composable
 fun CarItem(
     car: Car,
-    currentTime: LocalDateTime
+    currentTime: LocalDateTime,
+    adminView: Boolean,
+    onRemoveCar: (Car) -> Unit,
+    onViewCar: (Car) -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 4.dp)
+            .clickable(onClick = { expanded = true })
             .border(
                 width = 2.dp,
                 //color = if (isAvailable(currentTime,car.reservations)) Color.Black else Color.Red,
@@ -129,22 +186,49 @@ fun CarItem(
             ),
         shape = MaterialTheme.shapes.medium
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = car.carName,
-                style = MaterialTheme.typography.titleSmall
-            )
-            Text(
-                text = "${car.brand} ${car.model}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = if (car.availabilityStatus) "Avaiable" else "Unavaiable",
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = car.carName,
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Text(
+                    text = "${car.brand} ${car.model}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = if (car.availabilityStatus) "Avaiable" else "Unavaiable",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            if (adminView) { // Show options if the current user is an admin and the user is not an admin
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("View Details") },
+                        onClick = {
+                            expanded = false
+                            onViewCar(car)
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Remove Car") },
+                        onClick = {
+                            expanded = false
+                            onRemoveCar(car)
+                        }
+                    )
+                }
+            }
         }
+
     }
 }
 
@@ -213,7 +297,13 @@ fun PreviewUserItem() {
 @Composable
 fun PreviewCarItem() {
     val car: Car = TestValues.getCar()
-    CarItem(car = car, currentTime = LocalDateTime.now())
+    CarItem(
+        car = car,
+        currentTime = LocalDateTime.now(),
+        adminView = true,
+        onRemoveCar = {},
+        onViewCar = {}
+        )
 }
 
 // Preview for TripItem
