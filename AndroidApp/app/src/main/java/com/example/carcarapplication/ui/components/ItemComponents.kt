@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -43,8 +42,6 @@ import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.data_classes.Reservation
 import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.data_classes.User
-import com.example.carcarapplication.ui.utils.isAvailable
-import com.example.carcarapplication.ui.utils.promoteToAdmin
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -252,7 +249,11 @@ fun TripItem(trip: Trip) {
                 style = MaterialTheme.typography.titleSmall
             )
             Text(
-                text = "${trip.startTime.format(formattedTime)} - ${trip.endTime.format(formattedTime)}",
+                text = "${trip.startTime.format(formattedTime)} - ${
+                    trip.endTime.format(
+                        formattedTime
+                    )
+                }",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -303,7 +304,7 @@ fun PreviewCarItem() {
         adminView = true,
         onRemoveCar = {},
         onViewCar = {}
-        )
+    )
 }
 
 // Preview for TripItem

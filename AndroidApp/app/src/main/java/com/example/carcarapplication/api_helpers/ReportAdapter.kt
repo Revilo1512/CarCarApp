@@ -6,7 +6,6 @@ import com.example.carcarapplication.data_classes.Report
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
-import java.lang.IllegalArgumentException
 
 class ReportAdapter(
     private val damageReportAdapter: JsonAdapter<DamageReport>,

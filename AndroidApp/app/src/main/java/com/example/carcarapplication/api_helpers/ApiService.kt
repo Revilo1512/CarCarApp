@@ -63,12 +63,12 @@ interface ApiService {
     @GET("cars/{carID}")
     suspend fun getCarByID(
         @Path("carID") carID: Long
-    ) : Car
+    ): Car
 
     @GET("cars/getReservations")
     suspend fun getReservationsByCarID(
         @Query("carId") carId: Long
-    ) : List<Reservation>
+    ): List<Reservation>
 
     // Remove Car from Group
     @PUT("groups/addUser")
@@ -93,7 +93,7 @@ interface ApiService {
     suspend fun changeAdmin(
         @Query("groupID") groupID: Long,
         @Query("userID") userID: Long
-    ) : String
+    ): String
 
     @GET("trips")
     suspend fun getTrips(): List<Trip>
@@ -101,5 +101,5 @@ interface ApiService {
     @POST("cars/createCar")
     suspend fun createCar(
         @Body car: Car
-    ) : Car
+    ): Car
 }

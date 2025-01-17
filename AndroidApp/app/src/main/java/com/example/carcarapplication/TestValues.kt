@@ -41,7 +41,7 @@ object TestValues {
         )
     )
 
-    private fun getMembers(): List<User>{
+    private fun getMembers(): List<User> {
         return testMembers
     }
 
@@ -107,7 +107,7 @@ object TestValues {
             //trips = getTrips()
         )
     )
-    
+
 
     private val testTrips = listOf(
         Trip(
@@ -161,7 +161,7 @@ object TestValues {
         return testGroups
     }
 
-    fun getSingleGroup(): Group{
+    fun getSingleGroup(): Group {
         val groups = getGroups()
         return groups[0]
     }
@@ -169,7 +169,7 @@ object TestValues {
     fun getCar(): Car {
         return testCar
     }
-    
+
     fun getTrips(): List<Trip> {
         return testTrips
     }

@@ -1,9 +1,7 @@
 package com.example.carcarapplication.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,11 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,11 +30,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.carcarapplication.R
 import com.example.carcarapplication.TestValues
 import com.example.carcarapplication.api_helpers.RetrofitClient
 import com.example.carcarapplication.data_classes.Car
-import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.data_classes.Reservation
 import com.example.carcarapplication.ui.components.ReservationCard
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +40,7 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Composable
-fun CarViewScreen(carID : String) {
+fun CarViewScreen(carID: String) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val car = remember { mutableStateOf<Car?>(null) }
@@ -57,7 +51,8 @@ fun CarViewScreen(carID : String) {
         scope.launch(Dispatchers.IO) {
             try {
                 car.value = RetrofitClient.apiService.getCarByID(carID.toLong())
-                reservations.value = RetrofitClient.apiService.getReservationsByCarID(car.value!!.carID)
+                reservations.value =
+                    RetrofitClient.apiService.getReservationsByCarID(car.value!!.carID)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -97,7 +92,7 @@ fun CarViewScreen(carID : String) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Image(
-                            painter = painterResource(id = carImages[Random.nextInt(0,2)]),
+                            painter = painterResource(id = carImages[Random.nextInt(0, 2)]),
                             contentDescription = "bitmap",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -189,7 +184,9 @@ fun CarViewScreen(carID : String) {
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 30.sp,
-                    modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxWidth(),
                 )
 
                 HorizontalDivider(thickness = 2.dp, color = Color.Black)

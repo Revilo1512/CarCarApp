@@ -48,7 +48,9 @@ fun CarCreationScreen(groupName: String, onNavigateToGroup: (String) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize().padding(top = 80.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.carcarpicto),
@@ -108,10 +110,11 @@ fun CarCreationScreen(groupName: String, onNavigateToGroup: (String) -> Unit) {
                     containerColor = Color.Red,
                     contentColor = Color.White,
                     disabledContentColor = Color.Gray,
-                    disabledContainerColor = Color.LightGray),
+                    disabledContainerColor = Color.LightGray
+                ),
                 enabled = true,
                 modifier = Modifier.padding(top = 10.dp, start = 60.dp)
-                ) {
+            ) {
                 Text("Cancel")
             }
 
@@ -121,10 +124,12 @@ fun CarCreationScreen(groupName: String, onNavigateToGroup: (String) -> Unit) {
                     try {
                         scope.launch {
                             newCar = RetrofitClient.apiService.createCar(newCar)
-                            val groups = RetrofitClient.apiService.getGroupsOfUser(RetrofitClient.getUser().userID)
+                            val groups =
+                                RetrofitClient.apiService.getGroupsOfUser(RetrofitClient.getUser().userID)
                             val group = groups.find { group: Group -> group.name == groupName }
                             if (group != null) {
-                                val updatedGroup = RetrofitClient.apiService.addCar(group.groupID, newCar.carID)
+                                val updatedGroup =
+                                    RetrofitClient.apiService.addCar(group.groupID, newCar.carID)
                             }
                         }
                     } catch (e: Exception) {
@@ -137,7 +142,8 @@ fun CarCreationScreen(groupName: String, onNavigateToGroup: (String) -> Unit) {
                     containerColor = Color.Green,
                     contentColor = Color.White,
                     disabledContentColor = Color.Gray,
-                    disabledContainerColor = Color.LightGray),
+                    disabledContainerColor = Color.LightGray
+                ),
                 enabled = carName != "" && brand != "" && model != "",
                 modifier = Modifier.padding(top = 10.dp, end = 60.dp)
             ) {

@@ -19,6 +19,6 @@ class LocalDateTimeJsonAdapter {
     }
 
     companion object {
-        private val FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy HH:mm:ss")
+        private val FORMATTER: DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
     }
 }

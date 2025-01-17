@@ -57,7 +57,11 @@ fun UserSettingsScreen() {
                 )
             }
 
-            HorizontalDivider(thickness = 2.dp, color = Color.Black, modifier = Modifier.padding(bottom = 8.dp))
+            HorizontalDivider(
+                thickness = 2.dp,
+                color = Color.Black,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

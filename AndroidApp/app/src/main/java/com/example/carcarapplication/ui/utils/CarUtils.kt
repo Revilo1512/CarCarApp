@@ -1,16 +1,15 @@
 package com.example.carcarapplication.ui.utils
 
 import com.example.carcarapplication.data_classes.Reservation
-import com.example.carcarapplication.data_classes.Trip
 import java.time.LocalDateTime
 
-fun isReserved(){
+fun isReserved() {
     TODO()
 }
 
-fun isAvailable(currentTime: LocalDateTime, carTrips: List<Reservation>?): Boolean{
+fun isAvailable(currentTime: LocalDateTime, carTrips: List<Reservation>?): Boolean {
     if (carTrips != null) {
-        if (carTrips.isEmpty()){
+        if (carTrips.isEmpty()) {
             return true
         }
         val nextTrip = carTrips.first()

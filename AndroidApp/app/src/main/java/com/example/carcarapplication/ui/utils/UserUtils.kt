@@ -8,15 +8,11 @@ fun isAdmin(group: Group, user: User): Boolean {
 }
 
 //This probably has to be rewritten once the connection to the DB has been established
-fun promoteToAdmin(group: Group, newAdmin: User): Group{
+fun promoteToAdmin(group: Group, newAdmin: User): Group {
     require(group.users.contains(newAdmin)) {
         "User must be member of the group."
     }
     return group.copy(
         admin = newAdmin
     )
-}
-
-fun removeUser(group: Group, user: User): Boolean{
-    TODO()
 }

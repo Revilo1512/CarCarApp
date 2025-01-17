@@ -6,9 +6,9 @@ import java.time.LocalDateTime
 
 @JsonClass(generateAdapter = true)
 data class Reservation(
-    val id : Long,
+    val id: Long,
     val user: User,
     val car: Car,
-    val reservationStart : LocalDateTime,
-    val reservationEnd : LocalDateTime
+    val reservationStart: LocalDateTime,
+    val reservationEnd: LocalDateTime
 ) : Serializable

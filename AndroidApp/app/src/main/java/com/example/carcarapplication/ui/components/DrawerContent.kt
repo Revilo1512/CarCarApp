@@ -1,11 +1,25 @@
 package com.example.carcarapplication.ui.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,7 +52,7 @@ fun DrawerContent(
     ) {
         //Top Section
 
-        Column{
+        Column {
             Text(
                 text = user.name,
                 style = MaterialTheme.typography.headlineMedium,
@@ -48,7 +62,7 @@ fun DrawerContent(
             HorizontalDivider()
 
             TextButton(onClick = onNavigateToHome) {
-                Row (verticalAlignment = Alignment.CenterVertically){
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.Home,
                         contentDescription = "Home",
@@ -66,9 +80,9 @@ fun DrawerContent(
             var expanded by remember { mutableStateOf(false) }
             var selectedGroup by remember { mutableStateOf(groups.firstOrNull() ?: "No Groups") }
 
-            Box{
+            Box {
                 TextButton(onClick = { expanded = !expanded }) {
-                    Row (verticalAlignment = Alignment.CenterVertically){
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Group",
@@ -92,7 +106,8 @@ fun DrawerContent(
                                 Text(
                                     text = group.name,
                                     style = MaterialTheme.typography.titleMedium,
-                                ) },
+                                )
+                            },
                             onClick = {
                                 selectedGroup = group
                                 expanded = false
@@ -104,7 +119,7 @@ fun DrawerContent(
             }
 
             TextButton(onClick = onNavigateToUserSettings) {
-                Row (verticalAlignment = Alignment.CenterVertically){
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Settings",
@@ -120,7 +135,7 @@ fun DrawerContent(
         }
 
         //Bottom Section
-        TextButton(onClick =  onNavigateLogOut) {
+        TextButton(onClick = onNavigateLogOut) {
             Text(
                 text = "Log Out",
                 style = MaterialTheme.typography.titleMedium,

@@ -1,6 +1,5 @@
 package com.example.carcarapplication.ui.screens
 
-import DriveState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +21,7 @@ import com.example.carcarapplication.api_helpers.RetrofitClient
 import com.example.carcarapplication.data_classes.Car
 import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.ui.components.DropdownMenuWithItems
+import com.example.carcarapplication.ui.utils.DriveState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -58,16 +58,8 @@ fun PreDriveScreen(
             items = groups.map { it.name },
             selectedItem = selectedGroup?.name ?: "Select a group",
             onItemSelected = { groupName ->
-                selectedGroup = groups.find { it.name == groupName}
+                selectedGroup = groups.find { it.name == groupName }
                 cars = selectedGroup?.cars ?: listOf()
-                    // Fetch cars for the selected group
-                scope.launch {
-                    try {
-                        val groupDetails = RetrofitClient.apiService.getGroupById(selectedGroup!!.groupID)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
             }
         )
 

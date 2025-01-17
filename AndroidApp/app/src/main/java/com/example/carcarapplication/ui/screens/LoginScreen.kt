@@ -36,6 +36,7 @@ import com.example.carcarapplication.R
 import com.example.carcarapplication.api_helpers.RetrofitClient
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.util.Locale
 
 @Composable
 fun LoginScreen(onNavigateToRegister: () -> Unit) {
@@ -83,7 +84,10 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
                     loading = true
                     (context as? ComponentActivity)?.lifecycleScope?.launch {
                         try {
-                            val user = RetrofitClient.apiService.getUser(email, password)
+                            val user = RetrofitClient.apiService.getUser(
+                                email.lowercase(Locale.ROOT),
+                                password
+                            )
                             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                             RetrofitClient.setUser(user)
                             val intent = Intent(context, MainActivity::class.java)

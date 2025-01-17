@@ -1,7 +1,5 @@
 package com.example.carcarapplication.ui.screens
 
-import DriveState
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,14 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.carcarapplication.TestValues.getFavoriteCars
 import com.example.carcarapplication.api_helpers.RetrofitClient
-import com.example.carcarapplication.data_classes.Car
 import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.ui.components.CarCarouselItem
 import com.example.carcarapplication.ui.components.TripItem
+import com.example.carcarapplication.ui.utils.DriveState
+import com.example.carcarapplication.ui.utils.formatElapsedTime
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.time.LocalTime
 
 @Composable
@@ -77,8 +73,8 @@ fun HomeScreen(
     LaunchedEffect(isDriving) {
         while (isDriving) {
             val currentTime = System.currentTimeMillis()
-            val duration = (currentTime - DriveState.startTime.longValue) / 1000 // seconds
-            elapsedTime.value = String.format("%02d:%02d", duration / 60, duration % 60)
+            val duration = currentTime - DriveState.startTime.longValue // seconds
+            elapsedTime.value = formatElapsedTime(duration)
             kotlinx.coroutines.delay(1000L) // Update every second
         }
     }

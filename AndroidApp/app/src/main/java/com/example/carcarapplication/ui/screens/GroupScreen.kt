@@ -1,6 +1,5 @@
 package com.example.carcarapplication.ui.screens
 
-import android.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -17,8 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +34,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.carcarapplication.api_helpers.RetrofitClient
@@ -54,7 +50,11 @@ import retrofit2.Response
 import java.time.LocalDateTime
 
 @Composable
-fun GroupScreen(groupName: String, onNavigateToCarCreation: (String) -> Unit, onNavigateToCarView: (String) -> Unit) {
+fun GroupScreen(
+    groupName: String,
+    onNavigateToCarCreation: (String) -> Unit,
+    onNavigateToCarView: (String) -> Unit
+) {
 
     val currentUser = RetrofitClient.getUser()
     val groupState = remember { mutableStateOf<Group?>(null) }
@@ -106,8 +106,8 @@ fun GroupScreen(groupName: String, onNavigateToCarCreation: (String) -> Unit, on
     val group = groupState.value
     val adminView = group?.let { isAdmin(it, currentUser) } == true
 
-    if(showDialog && group != null) {
-        AlertDialog(onDismiss = {showDialog = false}, groupID = group.groupID)
+    if (showDialog && group != null) {
+        AlertDialog(onDismiss = { showDialog = false }, groupID = group.groupID)
     }
 
     Column(
@@ -121,14 +121,18 @@ fun GroupScreen(groupName: String, onNavigateToCarCreation: (String) -> Unit, on
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(
                 text = "Cars",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            if(adminView) {
+            if (adminView) {
                 Button(onClick = {
                     onNavigateToCarCreation(groupName)
                 }) {
@@ -151,7 +155,10 @@ fun GroupScreen(groupName: String, onNavigateToCarCreation: (String) -> Unit, on
                         onRemoveCar = {
                             coroutineScope.launch(Dispatchers.IO) {
                                 try {
-                                    val updatedGroup = RetrofitClient.apiService.removeCar(group.groupID, car.carID)
+                                    val updatedGroup = RetrofitClient.apiService.removeCar(
+                                        group.groupID,
+                                        car.carID
+                                    )
                                 } catch (e: Exception) {
                                     e.printStackTrace() // Handle the error appropriately
                                 }
@@ -175,7 +182,11 @@ fun GroupScreen(groupName: String, onNavigateToCarCreation: (String) -> Unit, on
         // MEMBER SECTION
         if (group != null) {
 
-            Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
                     text = "Members",
                     style = MaterialTheme.typography.titleMedium,
@@ -191,7 +202,9 @@ fun GroupScreen(groupName: String, onNavigateToCarCreation: (String) -> Unit, on
                 }
             }
             LazyColumn(
-                modifier = Modifier.fillMaxWidth().weight(1f, fill = false),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f, fill = false),
             ) {
                 items(group.users) { user ->
                     UserItem(
@@ -258,8 +271,12 @@ fun AlertDialog(onDismiss: () -> Unit, groupID: Long) {
                 onClick = {
                     scope.launch {
                         try {
-                            RetrofitClient.apiService.addUser(groupID = groupID, userID = userID.toLong())
-                            Toast.makeText(context, "User added successfully", Toast.LENGTH_SHORT).show()
+                            RetrofitClient.apiService.addUser(
+                                groupID = groupID,
+                                userID = userID.toLong()
+                            )
+                            Toast.makeText(context, "User added successfully", Toast.LENGTH_SHORT)
+                                .show()
                             onDismiss() // Dismiss the dialog after successful addition
                         } catch (e: Exception) {
                             Log.d("Add User", e.toString())

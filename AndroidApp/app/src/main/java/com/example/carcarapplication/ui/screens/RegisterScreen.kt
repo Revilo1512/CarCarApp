@@ -94,7 +94,8 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
                         try {
                             // Register the user
                             val user = RetrofitClient.apiService.postUser(request)
-                            Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT)
+                                .show()
 
                             // Now login the user by calling getUser API
                             val loggedInUser = RetrofitClient.apiService.getUser(email, password)
@@ -111,7 +112,8 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
                             Toast.makeText(context, "Network error", Toast.LENGTH_SHORT).show()
                         } catch (e: Exception) {
                             Log.e("RegisterScreen", "An error occurred: ${e.message}")
-                            Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT)
+                                .show()
                         } finally {
                             loading = false
                         }
