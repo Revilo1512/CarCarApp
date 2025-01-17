@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
     Optional<Group> findGroupById(Long id);
-    //Optional<Group> findGroupByCarId(@Param("carId")Long carId);
     @Query(value = "SELECT group_id FROM groups_cars  WHERE cars_id = :carId", nativeQuery = true)
     Optional<Long> findGroupByCarId(@Param("carId") Long carId);
 

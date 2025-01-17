@@ -4,6 +4,7 @@ import at.carcar.carcarbackend.Car.Car;
 import at.carcar.carcarbackend.Trip.Trip;
 import at.carcar.carcarbackend.User.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -22,9 +23,9 @@ public abstract class Report {
     private User author_user;
     private Date date;
     private String description;
-    //private List<String> changeLog;
     @ManyToOne
     @JoinColumn(name = "trip_id")
+    @Nullable
     private Trip trip;
     @ManyToOne
     @JoinColumn(name = "car_id")
@@ -46,23 +47,20 @@ public abstract class Report {
         this.trip = trip;
     }
 
-    public Report(int reportId, User author_user, Date date, String description, Trip trip, Car car) {
-        this.id = reportId;
-        this.author_user = author_user;
-        this.date = date;
-        this.description = description;
-        this.trip = trip;
-        this.car = car;
-        //this.changeLog = new ArrayList<String>();
-    }
-
     public Report(User author_user, Date date, String description, Trip trip, Car car) {
         this.author_user = author_user;
         this.date = date;
         this.description = description;
         this.trip = trip;
         this.car = car;
-        //this.changeLog = new ArrayList<String>();
+    }
+
+    public Report(User author_user, Date date, String description, Car car) {
+        this.author_user = author_user;
+        this.date = date;
+        this.description = description;
+        this.car = car;
+        this.trip = null;
     }
     public Report(){
 

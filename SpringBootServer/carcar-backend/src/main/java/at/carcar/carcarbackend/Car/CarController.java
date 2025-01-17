@@ -2,7 +2,6 @@ package at.carcar.carcarbackend.Car;
 import at.carcar.carcarbackend.Group.Group;
 import at.carcar.carcarbackend.Group.GroupService;
 import at.carcar.carcarbackend.Reservation.ReservationService;
-import at.carcar.carcarbackend.Trip.TripRepository;
 import at.carcar.carcarbackend.Trip.TripService;
 import at.carcar.carcarbackend.security.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +21,14 @@ public class CarController {
     private final GroupService groupService;
     private final AuthorizationService authService;
     private final ReservationService resService;
-    private final TripRepository tripRepository;
     private final TripService tripService;
 
     @Autowired
-    public CarController(CarService service, GroupService gs, AuthorizationService authService, ReservationService resService, CarService carService, TripRepository tripRepository, TripService tripService) {
+    public CarController(CarService service, GroupService gs, AuthorizationService authService, ReservationService resService,  TripService tripService) {
         this.service = service;
         this.groupService = gs;
         this.authService = authService;
         this.resService = resService;
-        this.tripRepository = tripRepository;
         this.tripService = tripService;
     }
 

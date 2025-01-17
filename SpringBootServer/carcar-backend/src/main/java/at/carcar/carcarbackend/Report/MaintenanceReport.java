@@ -14,17 +14,15 @@ public class MaintenanceReport extends Report {
     @ElementCollection
     private List<String> receiptPhoto;
     ;
-    public MaintenanceReport(int reportId, User author_user, Date date, String description, Trip trip, String maintenanceType, double cost, List<String> receiptPhoto, Car car) {
-        super(reportId, author_user, date, description, trip, car);
-        this.maintenanceType = maintenanceType;
-        this.cost = cost;
-        this.receiptPhoto = receiptPhoto;
-    }
-    public MaintenanceReport(User author_user, Date date, String description, Trip trip, String maintenanceType, double cost, List<String> receiptPhoto, Car car) {
+    public MaintenanceReport(User author_user, Date date, String description, Trip trip, String maintenanceType, double cost, Car car) {
         super(author_user, date, description, trip, car);
         this.maintenanceType = maintenanceType;
         this.cost = cost;
-        this.receiptPhoto = receiptPhoto;
+    }
+    public MaintenanceReport(User author_user, Date date, String description, String maintenanceType, double cost, Car car) {
+        super(author_user, date, description, car);
+        this.maintenanceType = maintenanceType;
+        this.cost = cost;
     }
 
     public MaintenanceReport() {

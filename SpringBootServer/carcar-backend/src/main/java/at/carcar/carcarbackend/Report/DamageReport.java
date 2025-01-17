@@ -13,16 +13,14 @@ public class DamageReport extends Report {
     @ElementCollection
     private List<String> damagePhotos;
 
-    public DamageReport(int reportId, User author_user, Date date, String description, Trip trip, String damageDetails, List<String> damagePhotos, Car car) {
-        super(reportId, author_user, date, description, trip, car);
-        this.damageDetails = damageDetails;
-        this.damagePhotos = damagePhotos;
-    }
-
-    public DamageReport(User author_user, Date date, String description, Trip trip, String damageDetails, List<String> damagePhotos, Car car) {
+    public DamageReport(User author_user, Date date, String description, Trip trip, String damageDetails, Car car) {
         super(author_user, date, description, trip, car);
         this.damageDetails = damageDetails;
-        this.damagePhotos = damagePhotos;
+    }
+
+    public DamageReport(User author_user, Date date, String description, String damageDetails, Car car) {
+        super(author_user, date, description, car);
+        this.damageDetails = damageDetails;
     }
 
     public DamageReport() {

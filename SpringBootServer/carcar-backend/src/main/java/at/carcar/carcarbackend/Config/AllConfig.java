@@ -129,9 +129,8 @@ public class AllConfig {
                 new DamageReport(users.get(0),
                         new Date(2024, 12, 2),
                         "I bin dem Heisl hint'n eini'gfoan!!",
-                        trips.get(0),
-                        "Mei Auto is fui hinnig, der Schass!",
-                        List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag"),cars.getFirst()),
+                        trips.get(0), "Mei Auto is fui hinnig, der Schass!",
+                        cars.getFirst()),
 
                 new MaintenanceReport(users.get(3),
                         new Date(2025, 1, 2),
@@ -139,7 +138,7 @@ public class AllConfig {
                         trips.get(1),
                         "Der Tank woa fui la",
                         1000.7,
-                        List.of("Leider nur in der PRO-Version verfügbar", "Kostet nur 200€ pro Tag"), cars.getLast())
+                         cars.getLast())
 
         );
     };

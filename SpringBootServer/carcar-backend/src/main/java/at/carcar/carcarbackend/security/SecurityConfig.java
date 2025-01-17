@@ -28,18 +28,6 @@ public class SecurityConfig{
                 .anyRequest().authenticated());  // Require authentication for any other request
         return http.build();
     }
-
-    /*@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http.httpBasic(withDefaults())
-                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-                .authorizeHttpRequests((authorizeRequests) -> authorizeRequests//.requestMatchers("/users/addUser", "/users/getUser").permitAll()
-                        //.anyRequest().permitAll());
-                        .requestMatchers("/users/register", "/users/login").permitAll()
-                        .anyRequest().authenticated());
-        return http.build();
-    }*/
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
