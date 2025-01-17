@@ -3,6 +3,7 @@ package at.carcar.carcarbackend.Trip;
 import at.carcar.carcarbackend.Car.Car;
 import at.carcar.carcarbackend.User.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -15,6 +16,7 @@ public class Trip {
     )
     private long id;
     private Date startTime;
+    @Nullable
     private Date endTime;
     private double distance;
     private double fuelUsed;
@@ -24,6 +26,13 @@ public class Trip {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @PrePersist
+    @PreUpdate
+    private void validateDates() {
+        if (endTime != null && !endTime.after(startTime) ) {
+            throw new IllegalStateException("Trip end date must be after the start date.");
+        }
+    }
 
     public Trip() {
 
@@ -41,6 +50,8 @@ public class Trip {
         this.startTime = startTime;
         this.car = car;
         this.user = user;
+        distance = 0;
+        fuelUsed = 0;
     }
     public Trip(Date startTime, Date endTime, double distance, double fuelUsed, Car car, User user) {
         this.startTime = startTime;

@@ -17,6 +17,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -93,33 +96,33 @@ public class AllConfig {
 
     private List<Group> listOfGroups() {
         return List.of(
-                new Group("Heiselpartie",
+                new Group(
+                        "Heiselpartie",
                         users.get(0),
-                        List.of(users.get(1), users.get(2)),
-                        List.of(cars.get(0), cars.get(1))),
-
-                new Group("Die App ist mega - Gruppe!",
+                        new ArrayList<>(List.of(users.get(1), users.get(2))), // Make users list mutable
+                        new ArrayList<>(List.of(cars.get(0), cars.get(1)))    // Make cars list mutable
+                ),
+                new Group(
+                        "Die App ist mega - Gruppe!",
                         users.get(3),
-                        List.of(users.get(4), users.get(5)),
-                        List.of(cars.get(2)))
+                        new ArrayList<>(List.of(users.get(4), users.get(5))), // Make users list mutable
+                        new ArrayList<>(List.of(cars.get(2)))                 // Make cars list mutable
+                )
         );
-    };
+    }
+
 
     private List<Trip> listOfTrips() {
-        Trip trip1 = new Trip(new Date(2024, 12, 1),
-                new Date(2024, 12, 2),
-                5,
-                1,
-                cars.get(0),
-                users.getFirst());  // This is where the car is associated with the trip
+        // Convert LocalDateTime to java.util.Date
+        Date trip1StartDate = Date.from(LocalDateTime.of(2024, 12, 2, 0, 0).atZone(ZoneId.systemDefault()).toInstant());
+        Date trip1EndDate = Date.from(LocalDateTime.of(2024, 12, 3, 0, 0).atZone(ZoneId.systemDefault()).toInstant());
 
-        Trip trip2 = new Trip(new Date(2025, 1, 1),
-                new Date(2025, 1, 2),
-                100.5,
-                5.4,
-                cars.get(2),
-                users.get(3));
+        Date trip2StartDate = Date.from(LocalDateTime.of(2025, 1, 1, 0, 0).atZone(ZoneId.systemDefault()).toInstant());
+        Date trip2EndDate = Date.from(LocalDateTime.of(2025, 1, 2, 0, 0).atZone(ZoneId.systemDefault()).toInstant());
 
+        // Create trips with fixed dates
+        Trip trip1 = new Trip(trip1StartDate, trip1EndDate, 5, 1, cars.get(0), users.get(0));
+        Trip trip2 = new Trip(trip2StartDate, trip2EndDate, 100.5, 5.4, cars.get(2), users.get(3));
 
         return List.of(trip1, trip2);
     }

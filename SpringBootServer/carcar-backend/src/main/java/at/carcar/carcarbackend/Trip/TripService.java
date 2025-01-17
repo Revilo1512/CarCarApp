@@ -100,10 +100,6 @@ public class TripService {
             trip.setEndTime(newEndTime);
         }
 
-        // Ensure startTime is before endTime if both are updated
-        if (trip.getStartTime() != null && trip.getEndTime() != null && !trip.getEndTime().after(trip.getStartTime())) {
-            throw new IllegalStateException("End time must be after start time");
-        }
 
         return tripRepository.save(trip);
     }

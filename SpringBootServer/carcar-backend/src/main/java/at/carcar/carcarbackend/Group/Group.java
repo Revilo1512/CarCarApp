@@ -5,6 +5,7 @@ import at.carcar.carcarbackend.User.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,8 +41,9 @@ public class Group {
     public Group(String name, User admin, List<User> users, List<Car> cars) {
         this.name = name;
         this.admin = admin;
-        this.users = users;
-        this.cars = cars;
+        this.users = users != null ? users : new ArrayList<>(); // Initialize if null
+        this.cars = cars != null ? cars : new ArrayList<>();    // Initialize if null
+        this.addUser(admin);
     }
 
     public String getName() {

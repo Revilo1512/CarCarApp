@@ -29,7 +29,6 @@ public class TripController {
     }
 
     @GetMapping("/{tripID}")
-    @NonNull
     public ResponseEntity<?> getTripById(@PathVariable int tripID) {
 
         try {
@@ -44,10 +43,10 @@ public class TripController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/createTrip")
     public ResponseEntity<?> createTrip(
-            @RequestParam(required = false) double distance,
-            @RequestParam(required = false) double fuelUsed,
+            @RequestParam(required = false) Double distance,
+            @RequestParam(required = false) Double fuelUsed,
             @RequestParam String startTimeParam,
             @RequestParam Long carID,
             @RequestParam(required = false) String endTimeParam) {
@@ -59,18 +58,18 @@ public class TripController {
         }
     }
 
-    @PutMapping("/modifyTrip")
-    public ResponseEntity<?> modifyReservation(
-            @RequestParam long tripID,
-            @RequestParam(required = false) double distance,
-            @RequestParam(required = false) double fuelUsed,
+    @PutMapping("/modifyTrip/{tripId}")
+    public ResponseEntity<?> modifyTrip(
+            @PathVariable long tripId,
+            @RequestParam(required = false) Double distance,
+            @RequestParam(required = false) Double fuelUsed,
             @RequestParam(required = false) String startTimeParam,
             @RequestParam(required = false) String endTimeParam) {
         try {
-            Trip trp = service.findTripById(tripID)
-                    .orElseThrow(() -> new IllegalStateException("Trip with ID: " + tripID + " not found!"));
+            Trip trp = service.findTripById(tripId)
+                    .orElseThrow(() -> new IllegalStateException("Trip with ID: " + tripId + " not found!"));
             if(trp.getUser().getId() == authorizationService.getAuthenticatedUserId()){
-                Trip trip = service.modifyTrip(tripID, distance,fuelUsed,startTimeParam,endTimeParam);
+                Trip trip = service.modifyTrip(tripId, distance,fuelUsed,startTimeParam,endTimeParam);
                 return ResponseEntity.ok(trip);
             }
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to modify the trip!");
