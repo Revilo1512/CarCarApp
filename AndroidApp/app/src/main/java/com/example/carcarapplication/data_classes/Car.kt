@@ -5,7 +5,7 @@ import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class Car(
-    val carID : Int,
+    val carID : Long,
     val carName : String,
     val brand : String,
     val model : String,
