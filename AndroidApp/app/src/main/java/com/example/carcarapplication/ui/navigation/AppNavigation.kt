@@ -42,6 +42,7 @@ import com.example.carcarapplication.ui.components.DrawerContent
 import com.example.carcarapplication.ui.components.updateGroups
 import com.example.carcarapplication.ui.screens.CarCreationScreen
 import com.example.carcarapplication.ui.screens.CarViewScreen
+import com.example.carcarapplication.ui.screens.CreateReservationScreen
 import com.example.carcarapplication.ui.screens.DriveInfoScreen
 import com.example.carcarapplication.ui.screens.GroupCreationScreen
 import com.example.carcarapplication.ui.screens.GroupScreen
@@ -155,8 +156,16 @@ fun AppNavigation(navController: NavHostController) {
                         GroupScreen(
                             groupName = groupName1,
                             onNavigateToCarCreation = { groupName -> navController.navigate("carCreation/$groupName") },
-                            onNavigateToCarView = { carID -> navController.navigate("carView/$carID") },
-                            onNavigateToHome = { navController.navigate("home") })
+                            onNavigateToCarView = { carID, adminView -> navController.navigate("carView/$carID/$adminView") },
+                            onNavigateToHome = { navController.navigate("home") },
+                            onNavigateToCreateReservation = { carID -> navController.navigate("createReservation/$carID")})
+                    }
+                    composable("createReservation/{carID}") { backStackEntry ->
+                        val carID1 = backStackEntry.arguments?.getString("carID") ?: "Unknown Car"
+                        CreateReservationScreen(
+                            onNavigateToHome = { navController.navigate("home") },
+                            carID1.toLong()
+                        )
                     }
                     composable("user settings") {
                         UserSettingsScreen()
@@ -180,9 +189,10 @@ fun AppNavigation(navController: NavHostController) {
                             updateGroups = { userID, context -> updateGroups(userID, context) }
                         )
                     }
-                    composable("carView/{carID}") { backStackEntry ->
-                        val carID1 = backStackEntry.arguments?.getString("carID") ?: "Unknown Car"
-                        CarViewScreen(carID1)
+                    composable("carView/{carID}/{adminView}") { backStackEntry ->
+                        val carID = backStackEntry.arguments?.getString("carID") ?: "Unknown Car"
+                        val adminView = backStackEntry.arguments?.getString("adminView") ?: "false"
+                        CarViewScreen(carID, adminView)
                     }
                     composable("driveInfo") {
                         DriveInfoScreen(

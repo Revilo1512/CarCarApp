@@ -232,7 +232,7 @@ suspend fun updateGroups(
         e.printStackTrace()
         Log.d("updateDrawerGroup", "Error: ${e.message}", e)
         withContext(Dispatchers.Main) {
-            Toast.makeText(context, "Failed to fetch groups", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "User is not part of a group", Toast.LENGTH_SHORT).show()
         }
         emptyList() // Return an empty list on error
     }

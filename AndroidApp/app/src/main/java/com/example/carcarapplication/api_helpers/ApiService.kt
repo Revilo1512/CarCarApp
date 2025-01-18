@@ -2,6 +2,7 @@ package com.example.carcarapplication.api_helpers
 
 import com.example.carcarapplication.data_classes.Car
 import com.example.carcarapplication.data_classes.Group
+import com.example.carcarapplication.data_classes.Report
 import com.example.carcarapplication.data_classes.Reservation
 import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.data_classes.User
@@ -15,6 +16,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.time.LocalDateTime
 
 interface ApiService {
     @GET("users/login")
@@ -104,16 +106,6 @@ interface ApiService {
     @GET("reservations/getReservationForUser")
     suspend fun getReservationForUser() : List<Reservation>
 
-//    @POST("reservations/createReservation")
-//    suspend fun createReservation(
-//        @Body reservation: Reservation
-//    ): Reservation
-//
-//    @DELETE("reservations/cancelReservation")
-//    suspend fun cancelReservation(
-//        @Query("reservationID") reservationID: Long
-//    ): String
-
     //Trips
     @GET("trips")
     suspend fun getTrips(): List<Trip>
@@ -131,4 +123,21 @@ interface ApiService {
         @Query("fuelUsed") fuelUsed: Double,
         @Query("endTimeParam") endTime: String
     ): Trip
+
+    @POST("reservations/createReservation")
+    suspend fun createReservation(
+        @Query("carID") carID: Long,
+        @Query("startTime") startTime: String,
+        @Query("endTime") endTime: String
+    ) : Reservation
+
+    @GET("cars/getStatistics")
+    suspend fun getStatisticsForCar(
+        @Query("carId") carID: Long
+    ) : Map<String, Any>
+
+    @GET("reports/car/{carId}")
+    suspend fun getReportsByCar(
+        @Path("carId") carID: Long
+    ) : List<Report>
 }

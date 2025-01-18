@@ -18,7 +18,7 @@ class ReportAdapter(
 
         return when {
             json.containsKey("damageDetails") -> damageReportAdapter.fromJsonValue(json)
-            json.containsKey("type") -> maintenanceReportAdapter.fromJsonValue(json)
+            json.containsKey("maintenanceType") -> maintenanceReportAdapter.fromJsonValue(json)
             else -> throw IllegalArgumentException("Unknown Report type")
         }
     }

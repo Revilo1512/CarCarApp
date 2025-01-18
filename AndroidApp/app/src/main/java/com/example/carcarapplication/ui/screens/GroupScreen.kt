@@ -59,8 +59,9 @@ import java.time.LocalDateTime
 fun GroupScreen(
     groupName: String,
     onNavigateToCarCreation: (String) -> Unit,
-    onNavigateToCarView: (String) -> Unit,
-    onNavigateToHome: () -> Unit
+    onNavigateToCarView: (String, String) -> Unit,
+    onNavigateToHome: () -> Unit,
+    onNavigateToCreateReservation: (String) -> Unit
 ) {
 
     val currentUser = RetrofitClient.getUser()
@@ -203,7 +204,10 @@ fun GroupScreen(
                             }
                         },
                         onViewCar = {
-                            onNavigateToCarView(car.carID.toString())
+                            onNavigateToCarView(car.carID.toString(), adminView.toString())
+                        },
+                        onCreateReservation = {
+                            onNavigateToCreateReservation(car.carID.toString())
                         }
                     )
                 }

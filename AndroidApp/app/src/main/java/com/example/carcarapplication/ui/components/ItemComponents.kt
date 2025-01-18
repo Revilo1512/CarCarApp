@@ -166,7 +166,8 @@ fun CarItem(
     currentTime: LocalDateTime,
     adminView: Boolean,
     onRemoveCar: (Car) -> Unit,
-    onViewCar: (Car) -> Unit
+    onViewCar: (Car) -> Unit,
+    onCreateReservation: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -203,18 +204,25 @@ fun CarItem(
                 )
             }
 
-            if (adminView) { // Show options if the current user is an admin and the user is not an admin
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("View Details") },
-                        onClick = {
-                            expanded = false
-                            onViewCar(car)
-                        }
-                    )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text("View Details") },
+                    onClick = {
+                        expanded = false
+                        onViewCar(car)
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Create Reservation") },
+                    onClick = {
+                        expanded = false
+                        onCreateReservation()
+                    }
+                )
+                if (adminView) {
                     DropdownMenuItem(
                         text = { Text("Remove Car") },
                         onClick = {
@@ -224,6 +232,7 @@ fun CarItem(
                     )
                 }
             }
+
         }
 
     }
@@ -354,7 +363,8 @@ fun PreviewCarItem() {
         currentTime = LocalDateTime.now(),
         adminView = true,
         onRemoveCar = {},
-        onViewCar = {}
+        onViewCar = {},
+        onCreateReservation = {}
     )
 }
 

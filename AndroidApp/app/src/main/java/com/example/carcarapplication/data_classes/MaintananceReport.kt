@@ -8,11 +8,12 @@ import java.time.LocalDateTime
 data class MaintenanceReport(
     val maintenanceType: String,
     val cost: Double,
-    val receipt: List<String>, // Use String (e.g., URLs or file paths)
-    override val id: Long,
+    val receiptPhoto: List<String?>, // Use String (e.g., URLs or file paths)
+    override val reportID: Long?,
     override val author_user: User,
     override val date: LocalDateTime,
     override val description: String,
     // override val changeLog: List<String>,
-    override val trip: Trip
-) : Report(id, author_user, date, description, trip), Serializable
+    override val trip: Trip,
+    override val car: Car
+) : Report(reportID, author_user, date, description, trip, car), Serializable

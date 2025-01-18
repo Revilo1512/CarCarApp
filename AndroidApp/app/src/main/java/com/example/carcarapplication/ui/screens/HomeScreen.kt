@@ -59,14 +59,12 @@ fun HomeScreen(
     val isDriving = DriveState.isDriving.value
     val elapsedTime = remember { mutableStateOf("00:00") }
     val scope = rememberCoroutineScope()
-    val trips = remember { mutableStateOf<List<Trip>>(emptyList()) }
     val reservations = remember { mutableStateOf<List<Reservation>>(emptyList()) }
 
     // Make the API call
     LaunchedEffect(Unit) {
         scope.launch {
             try {
-                trips.value = RetrofitClient.apiService.getTrips()
                 reservations.value = RetrofitClient.apiService.getReservationForUser()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -116,7 +114,7 @@ fun HomeScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 500.dp)
+                    .heightIn(max = 300.dp)
             ) {
                 when {
                     reservations.value.isEmpty() -> {
@@ -149,7 +147,7 @@ fun HomeScreen(
 
             // FAVOURITES SECTION
             Text(
-                text = "Favourites (coming soon)",
+                text = "Favorites (coming soon)",
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
