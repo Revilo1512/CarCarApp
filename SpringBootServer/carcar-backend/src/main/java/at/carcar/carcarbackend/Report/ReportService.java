@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +74,9 @@ public class ReportService {
         Map<String, Object> result = new HashMap<>();
         result.put("car", car);
         result.put("user", user);
-        result.put("currentDate", new Date()); // Store as a Date object
+        LocalDateTime now = LocalDateTime.now();
+        Date currentDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        result.put("currentDate", currentDate); // Store as a Date object
         return result;
     }
 

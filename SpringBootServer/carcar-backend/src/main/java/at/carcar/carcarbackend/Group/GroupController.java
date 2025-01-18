@@ -205,11 +205,9 @@ public class GroupController {
     // Get All Groups of User
     @GetMapping("/groupsOfUser")
     @NonNull
-    public ResponseEntity<?> getAllGroupsOfUser(@RequestParam Long userID) {
+    public ResponseEntity<?> getAllGroupsOfUser() {
         try {
-            if (!authService.isSameUser(userID)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to view this user's groups");
-            }
+            long userID = authService.getAuthenticatedUserId();
 
             List<Group> groups = service.findAllGroupsWithUser(userID);
 

@@ -36,7 +36,7 @@ public class GroupService {
         Group group;
         try{
             if (groupName != null && !groupName.isEmpty()) {
-                group = new Group(groupName, user, List.of(), List.of());
+                group = new Group(groupName, user, new ArrayList<>(), new ArrayList<>());
                 groupRepository.save(group);
             } else {
                 throw new IllegalStateException("Invalid Group Name!");

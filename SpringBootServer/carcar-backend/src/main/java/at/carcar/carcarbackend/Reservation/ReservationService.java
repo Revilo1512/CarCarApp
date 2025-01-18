@@ -9,6 +9,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -56,12 +59,13 @@ public class ReservationService {
         return reservation;
     }
 
-    private Date StringToDate(String dater) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    private Date StringToDate(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         try {
-            return formatter.parse(dater);
+            LocalDateTime localDateTime = LocalDateTime.parse(dateString, formatter);
+            return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         } catch (Exception e) {
-            throw new IllegalStateException("Date format wrong. Expected format: dd.MM.yyyy HH:mm:ss");
+            throw new IllegalStateException("Unable to parse date: " + dateString);
         }
     }
 

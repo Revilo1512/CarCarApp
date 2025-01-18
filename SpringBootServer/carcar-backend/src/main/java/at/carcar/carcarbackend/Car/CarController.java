@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -107,7 +109,10 @@ public class CarController {
             }
             String s = tripService.getCarStatistics(carId);
 
-            return ResponseEntity.ok(s);
+            Map<String, Object> response = new HashMap<>();
+            response.put("statistics", s);
+            return ResponseEntity.ok(response);
+
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

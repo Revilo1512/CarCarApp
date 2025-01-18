@@ -1,0 +1,8 @@
+Download Postgre
+Install Postgre with "admin" as password
+psql -U postgres
+Create database "carcardb"
+CREATE DATABASE carardb;
+
+Grant all priviledges to carcardb
+GRANT ALL PRIVILEGES ON DATABASE carardb TO postgres;

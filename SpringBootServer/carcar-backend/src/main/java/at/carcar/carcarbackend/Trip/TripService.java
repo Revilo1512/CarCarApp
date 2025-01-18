@@ -12,6 +12,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -45,12 +48,13 @@ public class TripService {
         tripRepository.deleteById(id);
     }
 
-    private Optional<Date> StringToDate(String dateString) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    private Date StringToDate(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         try {
-            return Optional.ofNullable(formatter.parse(dateString));
+            LocalDateTime localDateTime = LocalDateTime.parse(dateString, formatter);
+            return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         } catch (Exception e) {
-            return Optional.empty();
+            throw new IllegalStateException("Unable to parse date: " + dateString);
         }
     }
 
@@ -65,8 +69,9 @@ public class TripService {
                 new IllegalStateException("Group with Car" + carID + " does not exist"));
 
         if(!groupService.isUserInGroup(carID, userID)) throw new IllegalStateException("Not authorized to add trip");
+        Date dat = StringToDate(startTimeParam);
 
-        Trip trip = new Trip(StringToDate(startTimeParam).get(),car,user);
+        Trip trip = new Trip(dat,car,user);
 
         tripRepository.save(trip);
         return trip;
@@ -89,14 +94,12 @@ public class TripService {
 
         // Update startTime if provided
         if (startTimeParam != null) {
-            Date newStartTime = StringToDate(startTimeParam).orElseThrow(() ->
-                    new IllegalStateException("Invalid start time format"));
+            Date newStartTime = StringToDate(startTimeParam);
             trip.setStartTime(newStartTime);
         }
 
         if (endTimeParam != null) {
-            Date newEndTime = StringToDate(endTimeParam).orElseThrow(() ->
-                    new IllegalStateException("Invalid end time format"));
+            Date newEndTime = StringToDate(endTimeParam);
             trip.setEndTime(newEndTime);
         }
 
