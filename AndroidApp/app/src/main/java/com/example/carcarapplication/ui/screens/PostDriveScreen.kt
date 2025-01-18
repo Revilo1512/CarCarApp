@@ -84,7 +84,6 @@ fun PostDriveScreen(
         Button(
             onClick = {
                 DriveState.isDriving.value = false
-                DriveState.trip.value = Trip()
                 scope.launch {
                     try {
                         RetrofitClient.apiService.modifyTrip(
@@ -93,6 +92,7 @@ fun PostDriveScreen(
                             fuelUsed = fuelUsed,
                             endTime = formattedEndTime
                         )
+                        DriveState.trip.value = Trip()
                     } catch (e: HttpException) {
                         // Handle HTTP errors
                         val errorBody = e.response()?.errorBody()?.string() ?: "Unknown error"
