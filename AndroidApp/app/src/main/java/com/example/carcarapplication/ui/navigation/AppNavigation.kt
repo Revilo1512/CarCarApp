@@ -39,9 +39,11 @@ import com.example.carcarapplication.R
 import com.example.carcarapplication.api_helpers.RetrofitClient
 import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.ui.components.DrawerContent
+import com.example.carcarapplication.ui.components.updateGroups
 import com.example.carcarapplication.ui.screens.CarCreationScreen
 import com.example.carcarapplication.ui.screens.CarViewScreen
 import com.example.carcarapplication.ui.screens.DriveInfoScreen
+import com.example.carcarapplication.ui.screens.GroupCreationScreen
 import com.example.carcarapplication.ui.screens.GroupScreen
 import com.example.carcarapplication.ui.screens.HomeScreen
 import com.example.carcarapplication.ui.screens.PostDriveScreen
@@ -87,6 +89,10 @@ fun AppNavigation(navController: NavHostController) {
                         },
                         onNavigateToGroup = { groupName ->
                             navController.navigate("group/$groupName")
+                            scope.launch { drawerState.close() }
+                        },
+                        onNavigateToGroupCreation = {
+                            navController.navigate("groupCreation")
                             scope.launch { drawerState.close() }
                         },
                         onNavigateToUserSettings = {
@@ -149,7 +155,8 @@ fun AppNavigation(navController: NavHostController) {
                         GroupScreen(
                             groupName = groupName1,
                             onNavigateToCarCreation = { groupName -> navController.navigate("carCreation/$groupName") },
-                            onNavigateToCarView = { carID -> navController.navigate("carView/$carID") })
+                            onNavigateToCarView = { carID -> navController.navigate("carView/$carID") },
+                            onNavigateToHome = { navController.navigate("home") })
                     }
                     composable("user settings") {
                         UserSettingsScreen()
@@ -165,6 +172,12 @@ fun AppNavigation(navController: NavHostController) {
                         CarCreationScreen(
                             groupName = groupName1,
                             onNavigateToGroup = { groupName -> navController.navigate("group/$groupName") }
+                        )
+                    }
+                    composable("groupCreation") {
+                        GroupCreationScreen(
+                            onNavigateToHome = { navController.navigate("home") },
+                            updateGroups = { userID, context -> updateGroups(userID, context) }
                         )
                     }
                     composable("carView/{carID}") { backStackEntry ->

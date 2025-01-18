@@ -5,6 +5,8 @@ import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.data_classes.Reservation
 import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.data_classes.User
+import okhttp3.ResponseBody
+
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -26,14 +28,13 @@ interface ApiService {
         @Body user: User
     ): User
 
-    @GET("/{groupID}")
+    @GET("groups/{groupID}")
     suspend fun getGroupById(
         @Path("groupID") groupID: Long
     ): Group
 
     @POST("groups/createGroup")
     suspend fun createGroup(
-        @Query("adminID") adminID: Long,
         @Query("groupName") groupName: String
     ): Group
 
@@ -41,7 +42,7 @@ interface ApiService {
     @DELETE("groups/deleteGroup")
     suspend fun deleteGroup(
         @Query("groupID") groupID: Long
-    ): String // Response will be a message (String)
+    ): ResponseBody // Response will be a message (String)
 
     @GET("cars")
     fun getCars(): Call<List<Car>>

@@ -1,5 +1,6 @@
 package com.example.carcarapplication.ui.screens
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -13,11 +14,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -42,8 +46,10 @@ import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.ui.components.CarItem
 import com.example.carcarapplication.ui.components.UserItem
 import com.example.carcarapplication.ui.utils.isAdmin
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,7 +59,8 @@ import java.time.LocalDateTime
 fun GroupScreen(
     groupName: String,
     onNavigateToCarCreation: (String) -> Unit,
-    onNavigateToCarView: (String) -> Unit
+    onNavigateToCarView: (String) -> Unit,
+    onNavigateToHome: () -> Unit
 ) {
 
     val currentUser = RetrofitClient.getUser()
@@ -115,11 +122,42 @@ fun GroupScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = groupName,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = groupName,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            if (adminView && group != null) {
+                IconButton(
+                    onClick = {
+                        deleteGroup(
+                            groupID = group.groupID,
+                            coroutineScope = coroutineScope,
+                            context = context,
+                            onCompletion = onNavigateToHome
+                        )
+                    },
+                    colors = IconButtonColors(
+                        contentColor = Color.Red,
+                        containerColor = Color.White,
+                        disabledContentColor = Color.Gray,
+                        disabledContainerColor = Color.LightGray
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete"
+                    )
+                }
+            }
+        }
+
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -314,4 +352,34 @@ fun AlertDialog(onDismiss: () -> Unit, groupID: Long) {
         },
         modifier = Modifier.height(250.dp)
     )
+}
+
+
+fun deleteGroup(
+    groupID: Long,
+    coroutineScope: CoroutineScope,
+    context: Context,
+    onCompletion: () -> Unit
+) {
+    coroutineScope.launch(Dispatchers.IO) {
+        try {
+            // Call the API
+            val responseBody = RetrofitClient.apiService.deleteGroup(groupID)
+            val feedback = responseBody.string() // Extract the string from ResponseBody
+
+            // Log the feedback message
+            Log.d("deleteGroup", "Response: $feedback")
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, feedback, Toast.LENGTH_SHORT).show()
+                onCompletion() // Navigate to home or perform other actions
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.d("deleteGroup", "Error: ${e.message}", e)
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "Failed to delete group", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }
