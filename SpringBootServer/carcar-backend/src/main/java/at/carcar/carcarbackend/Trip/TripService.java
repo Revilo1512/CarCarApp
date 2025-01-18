@@ -68,7 +68,7 @@ public class TripService {
         Group grp = groupService.findGroupByCarId(carID).orElseThrow(() ->
                 new IllegalStateException("Group with Car" + carID + " does not exist"));
 
-        if(!groupService.isUserInGroup(carID, userID)) throw new IllegalStateException("Not authorized to add trip");
+        if(!groupService.isUserInGroup(grp.getId(), userID)) throw new IllegalStateException("Not authorized to add trip");
         Date dat = StringToDate(startTimeParam);
 
         Trip trip = new Trip(dat,car,user);
