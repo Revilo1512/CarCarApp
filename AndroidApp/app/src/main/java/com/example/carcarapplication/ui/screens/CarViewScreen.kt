@@ -54,6 +54,7 @@ import com.example.carcarapplication.data_classes.Reservation
 import com.example.carcarapplication.ui.components.ReservationCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -70,9 +71,7 @@ fun CarViewScreen(carID: String, adminView: String) {
     val statistics = remember { mutableStateOf<Map<String, Any>?>(null) }
     val carImages = TestValues.getFavoriteCars()
     val currentTime = LocalDateTime.now()
-    val reports = remember { mutableStateOf<List<Report?>>(emptyList()) }
-    val damageReports = remember { mutableStateListOf<DamageReport>() }
-    val maintenanceReports = remember { mutableStateListOf<MaintenanceReport>() }
+
 
     fun isReservationWithinTwoHours(reservation: Reservation): Boolean {
         val twoHoursLater = currentTime.plusHours(2)
@@ -84,28 +83,15 @@ fun CarViewScreen(carID: String, adminView: String) {
             try {
                 car.value = RetrofitClient.apiService.getCarByID(carID.toLong())
                 reservations.value = RetrofitClient.apiService.getReservationsByCarID(car.value!!.carID)
-                statistics.value = RetrofitClient.apiService.getStatisticsForCar(car.value!!.carID) as? Map<String, Any>
-                Log.d("Statistics value", statistics.value.toString())
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        scope.launch(Dispatchers.IO) {
             try {
-                reports.value = RetrofitClient.apiService.getReportsByCar(car.value!!.carID)
-                Log.d("reports", reports.value.toString())
-                // Separate the reports by type
-                damageReports.clear()
-                maintenanceReports.clear()
-                reports.value.forEach { report ->
-                    when (report) {
-                        is DamageReport -> damageReports.add(report)
-                        is MaintenanceReport -> maintenanceReports.add(report)
-                    }
-                }
+                statistics.value = RetrofitClient.apiService.getStatisticsForCar(car.value!!.carID) as? Map<String, Any>
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()?:"Unknown Error"
+                statistics.value = mapOf("statistics" to errorBody)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -373,9 +359,14 @@ fun ReportScreen(carID: Long) {
             item {
                 Text("Damage Reports", style = MaterialTheme.typography.headlineMedium)
             }
-
-            items(damageReports) { report ->
-                ReportCard(report)
+            if (damageReports.size > 0) {
+                items(damageReports) { report ->
+                    ReportCard(report)
+                }
+            } else {
+                item {
+                    Text("No entries", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(vertical = 10.dp), color = Color.Gray)
+                }
             }
         }
 
@@ -387,8 +378,14 @@ fun ReportScreen(carID: Long) {
                 Text("Maintenance Reports", style = MaterialTheme.typography.headlineLarge)
             }
 
-            items(maintenanceReports) { report ->
-                ReportCard(report)
+            if (maintenanceReports.size > 0) {
+                items(damageReports) { report ->
+                    ReportCard(report)
+                }
+            } else {
+                item {
+                    Text("No entries", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(vertical = 10.dp), color = Color.Gray)
+                }
             }
         }
     }
