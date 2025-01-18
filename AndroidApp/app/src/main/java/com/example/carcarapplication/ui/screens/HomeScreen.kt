@@ -29,10 +29,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.carcarapplication.TestValues.getFavoriteCars
 import com.example.carcarapplication.api_helpers.RetrofitClient
+import com.example.carcarapplication.data_classes.Reservation
 import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.ui.components.CarCarouselItem
+import com.example.carcarapplication.ui.components.ReservationItem
 import com.example.carcarapplication.ui.components.TripItem
 import com.example.carcarapplication.ui.utils.DriveState
 import com.example.carcarapplication.ui.utils.formatElapsedTime
@@ -57,12 +60,14 @@ fun HomeScreen(
     val elapsedTime = remember { mutableStateOf("00:00") }
     val scope = rememberCoroutineScope()
     val trips = remember { mutableStateOf<List<Trip>>(emptyList()) }
+    val reservations = remember { mutableStateOf<List<Reservation>>(emptyList()) }
 
     // Make the API call
     LaunchedEffect(Unit) {
         scope.launch {
             try {
                 trips.value = RetrofitClient.apiService.getTrips()
+                reservations.value = RetrofitClient.apiService.getReservationForUser()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -92,12 +97,14 @@ fun HomeScreen(
             Text(
                 text = "${greeting}, ${user.name}!",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
+                textAlign = TextAlign.Center,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 20.dp, bottom = 35.dp).fillMaxWidth()
             )
 
-            // SCHEDULE SECTION
             Text(
-                text = "Your upcoming trips",
+                text = "Your reservations",
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
@@ -112,7 +119,7 @@ fun HomeScreen(
                     .heightIn(max = 500.dp)
             ) {
                 when {
-                    trips.value.isEmpty() -> {
+                    reservations.value.isEmpty() -> {
                         item {
                             Text(
                                 text = "This looks awfully empty...",
@@ -127,8 +134,8 @@ fun HomeScreen(
                     }
 
                     else -> {
-                        items(trips.value) { trip ->
-                            TripItem(trip = trip)
+                        items(reservations.value) { reservation ->
+                            ReservationItem(reservation = reservation)
                         }
                     }
                 }
@@ -142,7 +149,7 @@ fun HomeScreen(
 
             // FAVOURITES SECTION
             Text(
-                text = "Favourites",
+                text = "Favourites (coming soon)",
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,

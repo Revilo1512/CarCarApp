@@ -260,6 +260,57 @@ fun TripItem(trip: Trip) {
     }
 }
 
+// Reservation Item Component
+@Composable
+fun ReservationItem(reservation: Reservation) {
+    val formattedDate = DateTimeFormatter.ofPattern("EEE, dd MMM")
+    val formattedTime = DateTimeFormatter.ofPattern("HH:mm")
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp, vertical = 4.dp),
+        shape = MaterialTheme.shapes.medium,
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            // Date Display
+            Text(
+                text = reservation.reservationStart.format(formattedDate),
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            // Time Range Display
+            Text(
+                text = "${reservation.reservationStart.format(formattedTime)} - ${
+                    reservation.reservationEnd.format(formattedTime)
+                }",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            // User Name Display
+            Text(
+                text = "User: ${reservation.user.name}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary
+            )
+
+            // Car Details Display
+            Text(
+                text = "Car: ${reservation.car.carName} (${reservation.car.brand})",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+    }
+}
+
+
+
 // Carousel Item Component [Still have to properly convert this into a Carousel tbh]
 @Composable
 fun CarCarouselItem(carImage: Int) {

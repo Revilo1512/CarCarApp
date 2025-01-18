@@ -103,4 +103,7 @@ interface ApiService {
     suspend fun createCar(
         @Body car: Car
     ): Car
+
+    @GET("reservations/getReservationForUser")
+    suspend fun getReservationForUser() : List<Reservation>
 }
