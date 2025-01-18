@@ -1,13 +1,16 @@
 package com.example.carcarapplication.ui.utils
 
 import android.annotation.SuppressLint
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import com.example.carcarapplication.data_classes.Trip
 
 object DriveState {
     var isDriving = mutableStateOf(false)
     var startTime = mutableLongStateOf(System.currentTimeMillis())
     var finalStartTime = mutableLongStateOf(0)
+    var trip: MutableState<Trip> = mutableStateOf(Trip())
 }
 
 @SuppressLint("DefaultLocale")

@@ -6,11 +6,11 @@ import java.time.LocalDateTime
 
 @JsonClass(generateAdapter = true)
 data class Trip(
-    val tripID: Long,
-    val startTime: LocalDateTime,
-    val endTime: LocalDateTime,
-    val distance: Double,
-    val fuelUsed: Double,
-    val car: Car,
-    val user: User
+    val tripID: Long = 0,
+    val startTime: LocalDateTime = LocalDateTime.now(),
+    val endTime: LocalDateTime? = null,
+    val distance: Double? = null,
+    val fuelUsed: Double? = null,
+    val car: Car? = null,
+    val user: User? = null
 ) : Serializable

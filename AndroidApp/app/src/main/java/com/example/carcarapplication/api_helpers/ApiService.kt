@@ -96,9 +96,6 @@ interface ApiService {
         @Query("userID") userID: Long
     ): String
 
-    @GET("trips")
-    suspend fun getTrips(): List<Trip>
-
     @POST("cars/createCar")
     suspend fun createCar(
         @Body car: Car
@@ -106,4 +103,32 @@ interface ApiService {
 
     @GET("reservations/getReservationForUser")
     suspend fun getReservationForUser() : List<Reservation>
+
+//    @POST("reservations/createReservation")
+//    suspend fun createReservation(
+//        @Body reservation: Reservation
+//    ): Reservation
+//
+//    @DELETE("reservations/cancelReservation")
+//    suspend fun cancelReservation(
+//        @Query("reservationID") reservationID: Long
+//    ): String
+
+    //Trips
+    @GET("trips")
+    suspend fun getTrips(): List<Trip>
+
+    @POST("trips/createTrip")
+    suspend fun createTrip(
+        @Query ("startTimeParam") startTime: String,
+        @Query ("carID") carID: Long
+    ): Trip
+
+    @PUT("trips/modifyTrip/{tripID}")
+    suspend fun modifyTrip(
+        @Path("tripID") tripID: Long,
+        @Query("distance") distance: Double,
+        @Query("fuelUsed") fuelUsed: Double,
+        @Query("endTimeParam") endTime: String
+    ): Trip
 }

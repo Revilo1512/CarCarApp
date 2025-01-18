@@ -1,5 +1,6 @@
 package com.example.carcarapplication.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +23,10 @@ import com.example.carcarapplication.data_classes.Car
 import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.ui.components.DropdownMenuWithItems
 import com.example.carcarapplication.ui.utils.DriveState
+import com.example.carcarapplication.ui.utils.formatToISO
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.ProtocolException
 
 @Composable
 fun PreDriveScreen(
@@ -78,6 +82,23 @@ fun PreDriveScreen(
             onClick = {
                 DriveState.isDriving.value = true
                 DriveState.startTime.longValue = System.currentTimeMillis()
+                val formattedStartTime = formatToISO(DriveState.startTime.longValue)
+                scope.launch {
+                    try {
+                        val createdTrip = RetrofitClient.apiService.createTrip(
+                            carID = selectedCar!!.carID,
+                            startTime = formattedStartTime
+                        )
+                        DriveState.trip.value = createdTrip
+                        Log.d("CreateTrip", "Created trip: $createdTrip")
+                    } catch (e: HttpException) {
+                        // Handle HTTP errors
+                        val errorBody = e.response()?.errorBody()?.string() ?: "Unknown error"
+                        Log.e("CreateTrip", "Error: $errorBody", e)
+                    } catch (e: Exception) {
+                        e.printStackTrace() // Handle error
+                    }
+                }
                 onNavigateToHome()
             },
             enabled = selectedGroup != null && selectedCar != null

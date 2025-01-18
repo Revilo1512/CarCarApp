@@ -250,7 +250,7 @@ fun TripItem(trip: Trip) {
             )
             Text(
                 text = "${trip.startTime.format(formattedTime)} - ${
-                    trip.endTime.format(
+                    trip.endTime?.format(
                         formattedTime
                     )
                 }",
