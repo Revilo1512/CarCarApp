@@ -212,8 +212,7 @@ fun getGreeting(): String {
 fun FAB(onClick: () -> Unit, modifier: Modifier = Modifier) {
     FloatingActionButton(
         onClick = onClick,
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        contentColor = MaterialTheme.colorScheme.secondary,
+        containerColor = MaterialTheme.colorScheme.primary,
         shape = CircleShape,
         modifier = modifier
     ) {

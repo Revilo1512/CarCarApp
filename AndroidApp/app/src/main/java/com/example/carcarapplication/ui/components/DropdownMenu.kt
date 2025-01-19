@@ -3,6 +3,7 @@ package com.example.carcarapplication.ui.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +23,10 @@ fun <T> DropdownMenuWithItems(
 
     Box {
         OutlinedButton(onClick = { expanded = true }) {
-            Text(selectedItem?.toString() ?: label)
+            Text(
+                selectedItem?.toString() ?: label,
+                style = MaterialTheme.typography.headlineMedium
+            )
         }
 
         DropdownMenu(
@@ -31,7 +35,10 @@ fun <T> DropdownMenuWithItems(
         ) {
             items.forEach { item ->
                 DropdownMenuItem(
-                    text = { Text(item.toString()) },
+                    text = {
+                        Text(item.toString(),
+                            style = MaterialTheme.typography.titleMedium)
+                    },
                     onClick = {
                         onItemSelected(item)
                         expanded = false

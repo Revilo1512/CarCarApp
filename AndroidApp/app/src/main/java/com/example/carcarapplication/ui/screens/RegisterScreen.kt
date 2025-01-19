@@ -120,7 +120,8 @@ fun RegisterScreen(onNavigateToLogin: () -> Unit) {
                         }
                     }
                 },
-                modifier = Modifier.padding(top = 20.dp)
+                modifier = Modifier.padding(top = 20.dp),
+                enabled = username.isNotBlank() && email.isNotBlank() && password.isNotBlank()
             ) {
                 Text(text = "Register")
             }
