@@ -159,4 +159,9 @@ interface ApiService {
         @Query("description") description: String ,
         @Query("damageDetails")damageDetails: String
     ) : DamageReport
+
+    @DELETE("reservations/cancelReservation")
+    suspend fun cancelReservation(
+        @Query("reservationID")reservationID: Long
+    )
 }

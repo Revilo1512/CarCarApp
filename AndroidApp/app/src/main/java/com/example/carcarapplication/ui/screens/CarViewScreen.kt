@@ -365,7 +365,7 @@ fun ReportScreen(carID: Long) {
             modifier = Modifier.height(250.dp)
         ) {
             if (maintenanceReports.size > 0) {
-                items(damageReports) { report ->
+                items(maintenanceReports) { report ->
                     ReportCard(report)
                 }
             } else {
@@ -393,7 +393,7 @@ fun ReportCard(report: Report) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Date: ${report.date?.year}.${report.date?.monthValue}.${report.date?.dayOfMonth}", //Had to change that as the human readable somehow just crashed the app
+                text = "Date: ${formatIsoDateToHumanReadable(report.date.toString())}", //Had to change that as the human readable somehow just crashed the app
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -424,15 +424,24 @@ fun ReportCard(report: Report) {
 }
 
 fun formatIsoDateToHumanReadable(isoDateString: String): String {
-    // Define a formatter that handles the format 'yyyy-MM-dd'T'HH:mm' (without seconds)
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+    // Define two possible formats: one with seconds and milliseconds, and one without
+    val formatterWithSeconds = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault())
+    val formatterWithoutSeconds = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
 
-    // Parse the input date string into LocalDateTime
-    val localDateTime = LocalDateTime.parse(isoDateString, formatter)
-
-    // Define a human-readable format
-    val humanReadableFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a", Locale.getDefault())
-
-    // Return the formatted string
-    return localDateTime.format(humanReadableFormatter)
+    // Try parsing the date with the first format (with seconds and milliseconds)
+    return try {
+        val localDateTime = LocalDateTime.parse(isoDateString, formatterWithSeconds)
+        val humanReadableFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a", Locale.getDefault())
+        localDateTime.format(humanReadableFormatter)
+    } catch (e: Exception) {
+        // If parsing with the first format fails, try the second format (without seconds)
+        try {
+            val localDateTime = LocalDateTime.parse(isoDateString, formatterWithoutSeconds)
+            val humanReadableFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a", Locale.getDefault())
+            localDateTime.format(humanReadableFormatter)
+        } catch (ex: Exception) {
+            // If both formats fail, return an error message or default value
+            "Invalid date format"
+        }
+    }
 }

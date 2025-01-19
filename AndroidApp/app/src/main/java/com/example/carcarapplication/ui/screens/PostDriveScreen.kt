@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
@@ -65,6 +67,7 @@ fun PostDriveScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Text("Summary", style = MaterialTheme.typography.headlineMedium)
         HorizontalDivider(thickness = 2.dp)
@@ -112,7 +115,7 @@ fun PostDriveScreen(
             ) {
                 Text("Select Report Type", style = MaterialTheme.typography.titleMedium)
                 RadioButtonGroup(
-                    options = listOf("No Report", "Maintenance", "Crash"),
+                    options = listOf("No Report", "Maintenance", "Damage"),
                     selectedOption = ReportState.selectedReportType.value,
                     onOptionSelected = { ReportState.selectedReportType.value = it }
                 )
@@ -122,14 +125,14 @@ fun PostDriveScreen(
                 // Conditional Form Display
                 when (ReportState.selectedReportType.value) {
                     "Maintenance" -> MaintenanceReportForm()
-                    "Crash" -> DamageReportForm()
+                    "Damage" -> DamageReportForm()
                     else -> Text("No additional report needed.")
                 }
             }
         }
 
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         Button(
             onClick = {
@@ -153,7 +156,7 @@ fun PostDriveScreen(
                                 )
                             }
 
-                            "Crash" -> {
+                            "Damage" -> {
                                 RetrofitClient.apiService.createDamage(
                                     carID = DriveState.trip.value.car!!.carID,
                                     tripID = DriveState.trip.value.tripID,
@@ -241,7 +244,7 @@ fun MaintenanceReportForm() {
                     maintenanceType = maintenanceType
                 )
             },
-            label = { Text("Damage Details") }
+            label = { Text("Maintenance Type") }
         )
         OutlinedTextField(
             value = cost,

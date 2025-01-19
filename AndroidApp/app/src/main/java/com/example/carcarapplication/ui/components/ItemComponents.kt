@@ -1,8 +1,8 @@
 package com.example.carcarapplication.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,18 +14,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,11 +40,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.carcarapplication.TestValues
+import com.example.carcarapplication.api_helpers.RetrofitClient
 import com.example.carcarapplication.data_classes.Car
 import com.example.carcarapplication.data_classes.Group
 import com.example.carcarapplication.data_classes.Reservation
 import com.example.carcarapplication.data_classes.Trip
 import com.example.carcarapplication.data_classes.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -175,13 +182,7 @@ fun CarItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 4.dp)
-            .clickable(onClick = { expanded = true })
-            .border(
-                width = 2.dp,
-                //color = if (isAvailable(currentTime,car.reservations)) Color.Black else Color.Red,
-                color = Color.Black,
-                shape = MaterialTheme.shapes.medium
-            ),
+            .clickable(onClick = { expanded = true }),
         shape = MaterialTheme.shapes.medium
     ) {
         Row(
@@ -196,10 +197,6 @@ fun CarItem(
                 )
                 Text(
                     text = "${car.brand} ${car.model}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = if (car.availabilityStatus) "Avaiable" else "Unavaiable",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -274,7 +271,7 @@ fun TripItem(trip: Trip) {
 fun ReservationItem(reservation: Reservation) {
     val formattedDate = DateTimeFormatter.ofPattern("EEE, dd MMM")
     val formattedTime = DateTimeFormatter.ofPattern("HH:mm")
-
+    val scope = rememberCoroutineScope()
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -282,47 +279,72 @@ fun ReservationItem(reservation: Reservation) {
         shape = MaterialTheme.shapes.extraLarge,
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            // Date Display
-            Text(
-                text = if (reservation.reservationStart.toLocalDate() == reservation.reservationEnd.toLocalDate()){
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth().padding(end = 16.dp)
+        ){
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                // Date Display
+                Text(
+                    text = if (reservation.reservationStart.toLocalDate() == reservation.reservationEnd.toLocalDate()){
                         reservation.reservationStart.format(formattedDate)
                     } else {
                         "${reservation.reservationStart.format(formattedDate)} - ${reservation.reservationEnd.format(formattedDate)}"
-                },
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.primary
-            )
+                    },
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
 
-            // Time Range Display
-            Text(
-                text = "${reservation.reservationStart.format(formattedTime)} - ${
-                    reservation.reservationEnd.format(formattedTime)
-                }",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+                // Time Range Display
+                Text(
+                    text = "${reservation.reservationStart.format(formattedTime)} - ${
+                        reservation.reservationEnd.format(formattedTime)
+                    }",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
 
-            // User Name Display
-            Text(
-                text = "User: ${reservation.user.name}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary
-            )
+                // User Name Display
+                Text(
+                    text = "User: ${reservation.user.name}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
 
-            // Car Details Display
-            Text(
-                text = "Car: ${reservation.car.carName} (${reservation.car.brand})",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary
-            )
+                // Car Details Display
+                Text(
+                    text = "Car: ${reservation.car.carName} (${reservation.car.brand})",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+            IconButton(
+                onClick = { cancelReservation(reservation.reservationID!!, scope) }
+            ){
+                Icon(imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    modifier = Modifier.size(64.dp))
+            }
         }
+
     }
 }
 
-
+fun cancelReservation(reservationID: Long, scope: CoroutineScope) {
+    scope.launch {
+        try {
+            RetrofitClient.apiService.cancelReservation(reservationID)
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string() ?: "Unknown error"
+            println("Error: $errorBody")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+}
 
 // Carousel Item Component [Still have to properly convert this into a Carousel tbh]
 @Composable
@@ -393,7 +415,7 @@ fun PreviewCarCarouselItem() {
 @Composable
 fun PreviewReservationItem() {
     val reservation: Reservation = Reservation(
-        id = 1,
+        reservationID = 1,
         user = TestValues.getUser(),
         car = TestValues.getCar(),
         reservationStart = LocalDateTime.now(),

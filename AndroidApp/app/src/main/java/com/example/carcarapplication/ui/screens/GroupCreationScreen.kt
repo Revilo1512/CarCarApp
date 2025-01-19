@@ -100,7 +100,7 @@ fun GroupCreationScreen(
                         try {
                             // Attempt to create the group
                             val createdGroup = RetrofitClient.apiService.createGroup(groupName)
-                            val updatedGroup = RetrofitClient.apiService.addUser(createdGroup.groupID, RetrofitClient.getUser().userID)
+                            //val updatedGroup = RetrofitClient.apiService.addUser(createdGroup.groupID, RetrofitClient.getUser().userID)
 
                             // After successful creation, update the list of groups and navigate home
                             // updateGroups(RetrofitClient.getUser().userID, context)

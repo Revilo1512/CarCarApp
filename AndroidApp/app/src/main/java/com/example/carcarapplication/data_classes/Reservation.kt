@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 @JsonClass(generateAdapter = true)
 data class Reservation(
-    val id: Long?,
+    val reservationID: Long?,
     val user: User,
     val car: Car,
     val reservationStart: LocalDateTime,

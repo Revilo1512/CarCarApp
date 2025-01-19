@@ -220,7 +220,8 @@ fun CreateReservationScreen(
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-                modifier = Modifier.padding(end = 16.dp)
+                modifier = Modifier.padding(end = 16.dp),
+                enabled = startDate != null && endDate != null
             ) {
                 Text("Save")
             }
