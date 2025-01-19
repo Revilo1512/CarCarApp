@@ -1,7 +1,9 @@
 package com.example.carcarapplication.api_helpers
 
 import com.example.carcarapplication.data_classes.Car
+import com.example.carcarapplication.data_classes.DamageReport
 import com.example.carcarapplication.data_classes.Group
+import com.example.carcarapplication.data_classes.MaintenanceReport
 import com.example.carcarapplication.data_classes.Report
 import com.example.carcarapplication.data_classes.Reservation
 import com.example.carcarapplication.data_classes.Trip
@@ -140,4 +142,21 @@ interface ApiService {
     suspend fun getReportsByCar(
         @Path("carId") carID: Long
     ) : List<Report>
+
+    @POST("reports/createMaintenance")
+    suspend fun createMaintenance(
+        @Query("carId") carID: Long,
+        @Query("tripId") tripID: Long,
+        @Query("description") description: String,
+        @Query("type") type: String,
+        @Query("cost") cost: Double
+    ) : MaintenanceReport
+
+    @POST("reports/createDamage")
+    suspend fun createDamage(
+        @Query("carId") carID: Long,
+        @Query("tripId") tripID: Long,
+        @Query("description") description: String ,
+        @Query("damageDetails")damageDetails: String
+    ) : DamageReport
 }

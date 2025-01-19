@@ -7,10 +7,10 @@ import java.time.LocalDateTime
 @JsonClass(generateAdapter = false) // Abstract class should not generate its own adapter
 abstract class Report(
     open val reportID: Long?,
-    open val author_user: User,
-    open val date: LocalDateTime,
-    open val description: String,
+    open val author_user: User?,
+    open val date: LocalDateTime?,
+    open val description: String?,
     // open val changeLog: List<String>,
-    open val trip: Trip,
-    open val car: Car
+    open val trip: Trip?,
+    open val car: Car?
 ) : Serializable

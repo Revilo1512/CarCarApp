@@ -1,16 +1,13 @@
 package com.example.carcarapplication.ui.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -18,9 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -42,7 +37,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.example.carcarapplication.TestValues
 import com.example.carcarapplication.api_helpers.RetrofitClient
@@ -55,9 +49,7 @@ import com.example.carcarapplication.ui.components.ReservationCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.random.Random
@@ -352,13 +344,11 @@ fun ReportScreen(carID: Long) {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
+        Text("Damage Reports", style = MaterialTheme.typography.headlineMedium)
         // Damage Reports Column
         LazyColumn(
             modifier = Modifier.padding(bottom = 16.dp).height(250.dp)
         ) {
-            item {
-                Text("Damage Reports", style = MaterialTheme.typography.headlineMedium)
-            }
             if (damageReports.size > 0) {
                 items(damageReports) { report ->
                     ReportCard(report)
@@ -369,15 +359,11 @@ fun ReportScreen(carID: Long) {
                 }
             }
         }
-
+        Text("Maintenance Reports", style = MaterialTheme.typography.headlineLarge)
         // Maintenance Reports Column
         LazyColumn(
             modifier = Modifier.height(250.dp)
         ) {
-            item {
-                Text("Maintenance Reports", style = MaterialTheme.typography.headlineLarge)
-            }
-
             if (maintenanceReports.size > 0) {
                 items(damageReports) { report ->
                     ReportCard(report)
@@ -402,12 +388,12 @@ fun ReportCard(report: Report) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Author: ${report.author_user.name}",
+                text = "Author: ${report.author_user?.name}",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Date: ${formatIsoDateToHumanReadable(report.date.toString())}",
+                text = "Date: ${report.date?.year}.${report.date?.monthValue}.${report.date?.dayOfMonth}", //Had to change that as the human readable somehow just crashed the app
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
