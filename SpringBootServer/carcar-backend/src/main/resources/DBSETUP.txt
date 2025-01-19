@@ -1,8 +1,28 @@
-Download Postgre
-Install Postgre with "admin" as password
-psql -U postgres
-Create database "carcardb"
-CREATE DATABASE carardb;
+Installation Instructions
 
-Grant all priviledges to carcardb
-GRANT ALL PRIVILEGES ON DATABASE carardb TO postgres;
+Step 1: Install PostgreSQL
+
+Download PostgreSQL from https://www.postgresql.org/download/.
+
+During installation:
+
+Set the password for the "postgres" user (e.g., "admin" or any other password you prefer).
+
+Choose port 5432 (if unavailable, note the port you select).
+
+Step 2: Set Up PostgreSQL
+
+Open a command prompt (CMD) and type:
+
+    psql -U postgres
+
+Enter the password you set during installation.
+
+
+Create a new database named carcardb:
+
+    CREATE DATABASE carcardb;
+
+Grant all rights on the database to the postgres user:
+
+    GRANT ALL PRIVILEGES ON DATABASE carcardb TO postgres;
