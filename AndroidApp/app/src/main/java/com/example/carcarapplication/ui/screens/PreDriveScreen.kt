@@ -3,9 +3,12 @@ package com.example.carcarapplication.ui.screens
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +29,6 @@ import com.example.carcarapplication.ui.utils.DriveState
 import com.example.carcarapplication.ui.utils.formatToISO
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.net.ProtocolException
 
 @Composable
 fun PreDriveScreen(
@@ -66,7 +68,7 @@ fun PreDriveScreen(
                 cars = selectedGroup?.cars ?: listOf()
             }
         )
-
+        Spacer(modifier = Modifier.size(8.dp))
         // Car Dropdown
         DropdownMenuWithItems(
             label = "Select Car",
@@ -76,7 +78,7 @@ fun PreDriveScreen(
                 selectedCar = cars.find { it.carName == carName } // Match selected car by name
             }
         )
-
+        Spacer(modifier = Modifier.size(16.dp))
         // Start Drive Button
         Button(
             onClick = {
@@ -103,7 +105,7 @@ fun PreDriveScreen(
             },
             enabled = selectedGroup != null && selectedCar != null
         ) {
-            Text("Start Drive")
+            Text("Start Drive", style = MaterialTheme.typography.headlineMedium)
         }
     }
 }

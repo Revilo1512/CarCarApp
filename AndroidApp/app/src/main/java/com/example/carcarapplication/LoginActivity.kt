@@ -9,12 +9,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.carcarapplication.ui.screens.LoginScreen
 import com.example.carcarapplication.ui.screens.RegisterScreen
+import com.example.carcarapplication.ui.theme.CarCarApplicationTheme
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            App()
+            CarCarApplicationTheme {
+                App()
+            }
         }
     }
 }

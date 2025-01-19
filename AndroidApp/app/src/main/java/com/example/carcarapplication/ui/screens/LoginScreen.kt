@@ -103,7 +103,8 @@ fun LoginScreen(onNavigateToRegister: () -> Unit) {
                         }
                     }
                 },
-                modifier = Modifier.padding(top = 20.dp)
+                modifier = Modifier.padding(top = 20.dp),
+                enabled = email.isNotBlank() && password.isNotBlank()
             ) {
                 Text(text = "Login")
             }

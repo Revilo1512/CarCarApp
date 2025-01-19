@@ -5,12 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.example.carcarapplication.ui.navigation.AppNavigation
+import com.example.carcarapplication.ui.theme.CarCarApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppNavigation(navController = rememberNavController())
+            CarCarApplicationTheme {
+                AppNavigation(navController = rememberNavController())
+            }
         }
     }
 }

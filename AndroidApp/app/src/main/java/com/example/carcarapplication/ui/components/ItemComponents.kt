@@ -279,7 +279,7 @@ fun ReservationItem(reservation: Reservation) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 4.dp, vertical = 4.dp),
-        shape = MaterialTheme.shapes.medium,
+        shape = MaterialTheme.shapes.extraLarge,
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
@@ -287,7 +287,11 @@ fun ReservationItem(reservation: Reservation) {
         ) {
             // Date Display
             Text(
-                text = reservation.reservationStart.format(formattedDate),
+                text = if (reservation.reservationStart.toLocalDate() == reservation.reservationEnd.toLocalDate()){
+                        reservation.reservationStart.format(formattedDate)
+                    } else {
+                        "${reservation.reservationStart.format(formattedDate)} - ${reservation.reservationEnd.format(formattedDate)}"
+                },
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -382,4 +386,18 @@ fun PreviewTripItem() {
 fun PreviewCarCarouselItem() {
     val carImage: Int = TestValues.getFavoriteCars().first()
     CarCarouselItem(carImage = carImage)
+}
+
+// Preview for CarCarouselItem
+@Preview(showBackground = true, backgroundColor = android.graphics.Color.GRAY.toLong())
+@Composable
+fun PreviewReservationItem() {
+    val reservation: Reservation = Reservation(
+        id = 1,
+        user = TestValues.getUser(),
+        car = TestValues.getCar(),
+        reservationStart = LocalDateTime.now(),
+        reservationEnd = LocalDateTime.now()
+    )
+    ReservationItem(reservation = reservation)
 }

@@ -2,7 +2,6 @@ package com.example.carcarapplication.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,15 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,54 +60,76 @@ fun PostDriveScreen(
         (distanceValue / 100) * fuelUsed
     } else 0.0
 
-    val totalEmissions = totalFuelUsage * 2.31
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("Summary", style = MaterialTheme.typography.titleLarge)
+        Text("Summary", style = MaterialTheme.typography.headlineMedium)
         HorizontalDivider(thickness = 2.dp)
-        Text("Trip Length:  $elapsedTime")
-        OutlinedTextField(
-            value = distance,
-            onValueChange = { distance = it },
-            label = { Text("Distance (km)") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal
-            )
-        )
+        Card(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                Text("Trip Length:  $elapsedTime")
+                OutlinedTextField(
+                    value = distance,
+                    onValueChange = { distance = it },
+                    label = { Text("Distance (km)") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal
+                    )
+                )
 
-        OutlinedTextField(
-            value = fuelAverage,
-            onValueChange = { fuelAverage = it },
-            label = { Text("Fuel (l/100km)") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal
-            )
-        )
-
-        Text("Fuel used: $totalFuelUsage l")
-        Text("Emissions: $totalEmissions kg CO₂")
-
-        Text("Select Report Type:")
-        RadioButtonGroup(
-            options = listOf("No Report", "Maintenance", "Crash"),
-            selectedOption = ReportState.selectedReportType.value,
-            onOptionSelected = { ReportState.selectedReportType.value = it }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Conditional Form Display
-        when (ReportState.selectedReportType.value) {
-            "Maintenance" -> MaintenanceReportForm()
-            "Crash" -> DamageReportForm()
-            else -> Text("No additional report needed.")
+                OutlinedTextField(
+                    value = fuelAverage,
+                    onValueChange = { fuelAverage = it },
+                    label = { Text("Fuel (l/100km)") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal
+                    )
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Fuel used: $totalFuelUsage l")
+            }
         }
+
+        //Text("Emissions: $totalEmissions kg CO₂")
+        Card(
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                Text("Select Report Type", style = MaterialTheme.typography.titleMedium)
+                RadioButtonGroup(
+                    options = listOf("No Report", "Maintenance", "Crash"),
+                    selectedOption = ReportState.selectedReportType.value,
+                    onOptionSelected = { ReportState.selectedReportType.value = it }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Conditional Form Display
+                when (ReportState.selectedReportType.value) {
+                    "Maintenance" -> MaintenanceReportForm()
+                    "Crash" -> DamageReportForm()
+                    else -> Text("No additional report needed.")
+                }
+            }
+        }
+
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(
             onClick = {
@@ -132,6 +152,7 @@ fun PostDriveScreen(
                                     cost = ReportState.maintenanceReport.value.cost
                                 )
                             }
+
                             "Crash" -> {
                                 RetrofitClient.apiService.createDamage(
                                     carID = DriveState.trip.value.car!!.carID,
@@ -158,7 +179,7 @@ fun PostDriveScreen(
                 onNavigateToHome()
             },
             modifier = Modifier.fillMaxWidth(),
-            enabled = distance != null && fuelAverage != null
+            enabled = distance.isNotEmpty() && fuelAverage.isNotEmpty()
         ) {
             Text("Save Drive")
         }
