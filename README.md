@@ -72,6 +72,33 @@ It allows users to create groups, reserve cars, log trips, and submit maintenanc
 
 ---
 
-### **Step 6: Frontend Setup**
+### **Step 6: Configure the Android Frontend**
 
-_To be continued..._
+1. Clone the repository in Android Studio:
+   ```
+   git clone https://github.com/Revilo1512/CarCarApp
+   ```
+2. Open the `AndroidApp` folder as a project in Android Studio.
+3. Update API configurations in `com/example/carcarapplication/api_helpers/RetrofitClient.kt`:
+   ```
+   BASE_URL = "http://YOUR_IP_ADDRESS:8080/"
+   ```
+   Replace `YOUR_IP_ADDRESS` with the IP address of the backend server.
+4. Modify network security in `res/xml/network_security_config.xml`:
+   ```
+   <domain includeSubdomains="true">YOUR_IP_ADDRESS</domain>
+   ```
+   Replace `YOUR_IP_ADDRESS` with the same IP address used in `BASE_URL`.
+5. Set up a virtual device in Android Studio's Device Manager:
+   - Choose a medium phone (e.g., Pixel 9 Pro).
+6. (Optional) To run the app on a physical Android phone:
+   - Connect your phone via USB.
+7. Start the Frontend Application
+- Run the app configuration from Android Studio on a virtual or physical device.
+
+---
+
+## Notes
+
+- Ensure both the backend and frontend are running on the same network for proper connectivity.
+- If you encounter issues, double-check the configurations and logs for errors.
